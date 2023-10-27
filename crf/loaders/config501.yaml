@@ -1,0 +1,1699 @@
+########
+#
+# CRF LOADER CONFIGURATION FILE
+# -----------------------------
+# V 5.0.1
+#
+# The configuration file provides a loader with the set of variables expected from
+# a specific CRF version, along with the mapped XNAT path and read method to translate
+# from source SDAPS CSV to XNAT values. 
+#
+# The configuration is structured as:
+# 
+# version
+# sections:
+#   section_vars:
+#      var attrs
+#
+# Each variable is defined by its name, which will be the key in the resulting dict.
+# The next key-attribute is 'path', to set the target XNAT path to set.
+# Depending on how the variable is defined on the SDAPS side, the read method and interpretation of its value
+# varies. 
+# The read method entry is constructed as:
+# read_method:
+#   name: str | the name of the read method that is implemented in the CRFLoader class 
+#   method_kwargs: named set of method keyword arguments
+#     kwarg: kwarg_value
+#
+#
+# IMPLEMENTED METHODS IN CRFLoader
+# --------------------------------
+# get_val (default): 
+#   Returns the value found in the column of the CSV with the variable name. 
+#   If there is no 'read_method' entry, the loader will use this method.
+# 
+# get_number_from_digits:
+#   Constructs an integer value from the partial digits as stored in SDAPS.
+#   The method iterates through the different SDAPS variables constructed by appending the n step to the 
+#   variable stem name. 
+#   method_kwargs:
+#     n_digits : int
+#       The number of digits that conforms the final number    
+
+version: &version '5.0.1'
+
+subject:  
+  subject_data:
+    gender:
+      path: 'xnat:subjectData/demographics[@xsi:type=xnat:demographicData]/gender'
+      read_method:
+        name: 'val_map'
+        method_kwargs:
+          value_mapping:
+            '0': 'M'
+            '1': 'F'
+
+    handedness:
+      path: 'xnat:subjectData/demographics[@xsi:type=xnat:demographicData]/handedness'
+      read_method:
+        name: 'val_map'
+        method_kwargs:
+          value_mapping:
+            '0': 'right'
+            '1': 'left'
+  dem_data:
+    subj_group:
+      path: 'dem:ddiDemographicData/subj_group'
+    
+    recruit:
+      path: 'dem:ddiDemographicData/recruit'
+      read_method:
+        name: 'find_checked'
+        method_kwargs:
+          top: 5
+
+    nation:
+      path: 'dem:ddiDemographicData/nation'
+      read_method:
+        name: 'find_checked'
+        method_kwargs:
+          start: 1
+          top: 3
+          value_map:
+            'nation_1': '0'
+            'nation_2': '3'
+            '': '3'
+
+    edu_level:
+      path: 'dem:ddiDemographicData/edu_level'
+
+    edu_years_1:
+      path: 'dem:ddiDemographicData/edu_years'
+
+experiments:
+  mh_data:
+    xml_name: 'mh:MedHistData'
+    prefix: 'mh'
+    title: 'Medical History'
+    sections:
+      root:
+        title: 'Base'
+        variables:
+          crf_version: 
+            path: 'mh:MedHistData/crf_version_sem'
+            read_method:
+              name: 'constant'
+              method_kwargs:
+                constant_value: *version
+          test_leader: 
+            path : 'mh:MedHistData/t_leader'
+            read_method: 
+              name: 'find_text_field'
+        
+      SI: 
+        title: 'Social information'
+        variables:
+          marital: 
+            path: 'mh:MedHistData/si_abst[@xsi:type=siData]/marital'
+            read_method:
+              name: 'get_val'
+            
+          children: 
+            path: 'mh:MedHistData/si_abst[@xsi:type=siData]/children'
+            read_method:
+              name: 'get_val'
+          cohab: 
+            path: 'mh:MedHistData/si_abst[@xsi:type=siData]/cohab'
+            read_method:
+              name: 'get_val'
+          #living_with_children not in XNAT
+          dwelling: 
+            path: 'mh:MedHistData/si_abst[@xsi:type=siData]/dwelling'
+            read_method:
+              name: 'get_val'
+          assistance: 
+            path: 'mh:MedHistData/si_abst[@xsi:type=siData]/assistance'
+            read_method:
+              name: 'get_val'
+          driving: 
+            path: 'mh:MedHistData/si_abst[@xsi:type=siData]/driving'
+            read_method:
+              name: 'get_val'
+          occupation:
+            path: 'mh:MedHistData/si_abst[@xsi:type=siData]/prof'
+            read_method:
+              name: 'find_text_field'
+          work: 
+            path: 'mh:MedHistData/si_abst[@xsi:type=siData]/work'
+            read_method:
+              name: 'get_val'
+            # siCom:
+              ## This comment field is split in two in the CRF
+              ## Join assistance_commend and work_comment and assign to this var
+              ## with find_text_field in script body
+
+      FH:
+        title: 'Family history'
+        variables:
+          family_cognitive_mother:
+            path: 'mh:MedHistData/fh_abst[@xsi:type=fhData]/mother_ci'
+          family_cognitive_father:
+            path: 'mh:MedHistData/fh_abst[@xsi:type=fhData]/father_ci'
+          family_cognitive_sibling:
+            path: 'mh:MedHistData/fh_abst[@xsi:type=fhData]/sibling_ci'
+          family_cognitive_other:
+            path: 'mh:MedHistData/fh_abst[@xsi:type=fhData]/other_ci'
+          family_vascular_mother:
+            path: 'mh:MedHistData/fh_abst[@xsi:type=fhData]/mother_vascular'
+          family_vascular_father:
+            path: 'mh:MedHistData/fh_abst[@xsi:type=fhData]/father_vascular'
+          family_vascular_sibling:
+            path: 'mh:MedHistData/fh_abst[@xsi:type=fhData]/sibling_vascular'
+          family_vascular_other:
+            path: 'mh:MedHistData/fh_abst[@xsi:type=fhData]/other_vascular'
+          family_pd_mother: 
+            path: 'mh:MedHistData/fh_abst[@xsi:type=fhData]/mother_pd'
+          family_pd_father: 
+            path: 'mh:MedHistData/fh_abst[@xsi:type=fhData]/father_pd'
+          family_pd_sibling: 
+            path: 'mh:MedHistData/fh_abst[@xsi:type=fhData]/sibling_pd'
+          family_pd_other: 
+            path: 'mh:MedHistData/fh_abst[@xsi:type=fhData]/other_pd'
+          family_pd_affected_1:
+            path: 'mh:MedHistData/fh_abst[@xsi:type=fhData]/family_number_pd_affected'
+          family_tremor_mother: 
+            path: 'mh:MedHistData/fh_abst[@xsi:type=fhData]/mother_tremor'
+          family_tremor_father: 
+            path: 'mh:MedHistData/fh_abst[@xsi:type=fhData]/father_tremor'
+          family_tremor_sibling: 
+            path: 'mh:MedHistData/fh_abst[@xsi:type=fhData]/sibling_tremor'
+          family_tremor_other: 
+            path: 'mh:MedHistData/fh_abst[@xsi:type=fhData]/other_tremor'
+          family_tremor_affected_1:
+            path: 'mh:MedHistData/fh_abst[@xsi:type=fhData]/family_number_tremor_affected'
+          family_other_mother: 
+            path: 'mh:MedHistData/fh_abst[@xsi:type=fhData]/mother_other'
+          family_other_father: 
+            path: 'mh:MedHistData/fh_abst[@xsi:type=fhData]/father_other'
+          family_other_sibling: 
+            path: 'mh:MedHistData/fh_abst[@xsi:type=fhData]/sibling_other'
+          family_other_other: 
+            path: 'mh:MedHistData/fh_abst[@xsi:type=fhData]/other_other'
+          fh_com:
+            path: 'mh:MedHistData/fh_abst[@xsi:type=fhData]/fh_com'
+            read_method: 
+              name: 'find_text_field'
+
+      CMH_PAR:
+        title: 'Current medical history PATIENT'
+        variables:
+          P_subcogdec:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_subcogdec'
+            read_method:
+                name: 'get_val'
+          P_concern:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_concern'
+            read_method:
+                name: 'get_val'
+          P_worse_than_others:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_worse_than_others'
+            read_method:
+                name: 'get_val'
+          P_impair:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_impair'
+            read_method:
+                name: 'get_val'
+          P_helpseeking:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_helpseeking'
+            read_method:
+                name: 'get_val'
+          ## TODO not in XNAT
+          # P_psy_symptom:
+          #   path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_psy_symptom'
+          #   read_method:
+          #       name: 'get_val'
+          P_1symp:
+            ## TODO there is a bug in the source tex file, assigning 7 to "Psykotiske symptomer" 
+            ## >7 the loader must add 1 to the value
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_1symp'
+            read_method:
+                name: 'find_checked'
+                method_kwargs:
+                  top: 18
+                  value_map:
+                    'P_1symp_1': '0'
+                    'P_1symp_2': '1'
+                    'P_1symp_3': '2'
+                    'P_1symp_4': '3'
+                    'P_1symp_5': '4'
+                    'P_1symp_6': '5'
+                    'P_1symp_7': '6'
+                    'P_1symp_8': '8'
+                    'P_1symp_9': '9'
+                    'P_1symp_10': '10'
+                    'P_1symp_11': '11'
+                    'P_1symp_12': '12'
+                    'P_1symp_13': '13'
+                    'P_1symp_14': '14'
+                    'P_1symp_15': '15'
+                    'P_1symp_16': '16'
+                    'P_1symp_17': '17'
+                    'P_1symp_18': '18'
+
+          P_1symp_side:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_1symp_side'
+            # P_1symp_other:
+            #  path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_1symp_other'
+            # TODO call in post 
+            # if P_1symp_other != 'NULL':
+            #    P_1symp = '7'
+          
+          # TODO add to XNAT
+          # pd_year_symptom_diagnosis:
+          #   path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/pd_diag_age'
+
+          pd_year_symptom_diagnosis_1:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_1symp_side'
+          
+          P_time1symp:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_time1symp'
+            read_method:
+              name: 'get_number_from_digits'
+              method_kwargs:
+                n_digits: 2
+          P_sudden:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_sudden'
+            read_method:
+              name: 'get_val'
+          P_develop:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_develop'
+            read_method:
+              name: 'get_val'
+          P_stepwise_deterio:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_stepwise_deterio'
+            read_method:
+              name: 'get_val'
+          P_memo:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_memo'
+            read_method:
+              name: 'get_val'
+          P_langu:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_langu'
+            read_method:
+              name: 'get_val'
+          P_geog:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_geog'
+            read_method:
+              name: 'get_val'
+          P_timeori:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_timeori'
+            read_method:
+              name: 'get_val'
+          ## TODO not in XNAT
+          # P_personality:
+          #   path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_personality'
+          #   read_method:
+          #     name: 'get_val'
+          P_IADL:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_iADL'
+            read_method:
+              name: 'get_val'
+          P_worktech:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_worktech'
+            read_method:
+              name: 'get_val'
+          P_TIA_symp:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_TIA_symp'
+            read_method:
+              name: 'get_val'
+          P_park_symp:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_park_symp'
+            read_method:
+              name: 'get_val'
+          P_balance:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_balance'
+            read_method:
+              name: 'get_val'
+          P_pain:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_pain'
+            read_method:
+              name: 'get_val'
+          P_pd_fluctuations:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_pd_fluctuations'
+          P_pd_involuntary_movements:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_pd_involuntary_movements'
+          P_pd_involuntary_movements_time:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_pd_involuntary_movements_time'
+          P_anxie:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_anxie'
+          ## TODO not in XNAT
+          # P_fallen_3_month:
+          #   path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_fallen_3_month'
+          #   read_method:
+          #     name: 'get_val'
+          # P_fallen_year:
+          #   path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_fallen_year'
+          #   read_method:
+          #     name: 'get_val'
+          # P_new_sleep_1:
+          #   path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_new_sleep_1'
+          #   read_method:
+          #     name: 'get_val'
+          # P_new_sleep_2:
+          #   path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_new_sleep_2'
+          #   read_method:
+          #     name: 'get_val'
+          P_dep:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_dep'
+            read_method:
+              name: 'get_val'
+          P_hallu_auditory:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_hallu_auditory'
+            read_method:
+              name: 'get_val'
+          P_hallu_visual:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_hallu_visual'
+            read_method:
+              name: 'get_val'
+          P_hallu_tactile:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_hallu_tactile'
+            read_method:
+              name: 'get_val'
+          P_hallu_olfatory:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_hallu_olfatory'
+            read_method:
+              name: 'get_val'
+          P_hallu_gustatory:
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_hallu_gustatory'
+            read_method:
+              name: 'get_val'
+          P_symp_comment: 
+            path: 'mh:MedHistData/cmhpar_abst[@xsi:type=cmhParData]/P_com'
+            read_method: 
+              name: 'find_text_field'
+
+      PMH:
+        title: 'Previous medical history'
+        variables:
+          stroke_isch:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/stroke_isch'
+            read_method:
+              name: 'get_val'
+          stroke_hem:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/stroke_hem'
+            read_method:
+              name: 'get_val'
+          tia:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/tia'
+            read_method:
+              name: 'get_val'
+          epi:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/epi'
+            read_method:
+              name: 'get_val'
+          pd:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/pd'
+            read_method:
+              name: 'get_val'
+          headtrauma:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/headtrauma'
+            read_method:
+              name: 'get_val'
+          cns_infec:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/cns_infec'
+            read_method:
+              name: 'get_val'
+
+          coronary:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/coronary'
+            read_method:
+              name: 'get_val'
+          afib:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/afib'
+            read_method:
+              name: 'get_val'
+          heartfail:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/heartfail'
+            read_method:
+              name: 'get_val'
+          heartsurg:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/heartsurg'
+            read_method:
+              name: 'get_val'
+          ht:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/ht'
+            read_method:
+              name: 'get_val'
+          claudi:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/claudi'
+            read_method:
+              name: 'get_val'
+
+          dm:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/dm'
+            read_method:
+              name: 'get_val'
+          thyroid:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/thyroid'
+            read_method:
+              name: 'get_val'
+          vitdef:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/vitdef'
+            read_method:
+              name: 'get_val'
+          hyperchol:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/hyperchol'
+            read_method:
+              name: 'get_val'
+
+          imp_smell:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/imp_smell'
+            read_method:
+              name: 'get_val'
+          imp_visu:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/imp_visu'
+            read_method:
+              name: 'get_val'
+          imp_hear:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/imp_hear'
+            read_method:
+              name: 'get_val'
+
+          depres:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/depres'
+            read_method:
+              name: 'get_val'
+          bipolar:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/bipolar'
+            read_method:
+              name: 'get_val'
+          anxie:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/anxie'
+            read_method:
+              name: 'get_val'
+          psychosis:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/psychosis'
+            read_method:
+              name: 'get_val'
+          delir:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/delir'
+            read_method:
+              name: 'get_val'
+
+          solvent:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/solvent'
+            read_method:
+              name: 'get_val'
+          copd:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/copd'
+            read_method:
+              name: 'get_val'
+          autoimm:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/autoimm'
+            read_method:
+              name: 'get_val'
+          malign:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/malign'
+            read_method:
+              name: 'get_val'
+
+          other_previous_comment:
+            path: 'mh:MedHistData/pmh_abst[@xsi:type=pmhData]/pmh_com'
+            read_method:
+              name: 'find_text_field'
+            #TODO other_previous must be set in the child instance and set from other_previous_com
+            #other_previous = '1' if other_previous_com != 'NULL' else '0'
+      
+      CurMed: #mh:MedHistData/curMed_abst[@xsi:type=curMedData]/
+        title: 'Current medication'
+        variables:
+          '6_1_2':
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/antiplatelet'
+            read_method:
+              name: 'get_val'    
+          '6_1_3':
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/marevan_warfarin'
+            read_method:
+              name: 'get_val'
+          '6_1_4':
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/DOAK'
+            read_method:
+              name: 'get_val'
+            # read in post
+            # anticoagulants = '0'
+            # if marevan_warfarin == '1' or DOAK == '1':
+            #     anticoagulants = '1'
+          '6_1_5':
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/antilipidemics'
+            read_method:
+              name: 'get_val'
+          '6_1_6':
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/antihypertensives'
+            read_method:
+              name: 'get_val'
+          '6_1_7':
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/acetylcholinesterase_inhibitors'
+            read_method:
+              name: 'get_val'
+          '6_1_8':
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/NMDA_receptor_antagonist_memantine'
+            read_method:
+              name: 'get_val'
+          '6_1_9':
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/benzodiazepines'
+            read_method:
+              name: 'get_val'
+          '6_1_10':
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/sleep_medicine'
+            read_method:
+              name: 'get_val'
+          '6_1_11':
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/codeine_obligan_opiates'
+            read_method:
+              name: 'get_val'
+          '6_1_12':
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/antiepileptics'
+            read_method:
+              name: 'get_val'
+          '6_1_13':
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/antidepressants'
+            read_method:
+              name: 'get_val'
+          '6_1_14':
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/typical_neuroleptics'
+            read_method:
+              name: 'get_val'
+          '6_1_15':
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/atypical_neuroleptics'
+            read_method:
+              name: 'get_val'
+            
+          '6_1_16':
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/insulin'
+            read_method:
+              name: 'get_val'
+          '6_1_17':
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/other_antidiabetics'
+            read_method:
+              name: 'get_val'
+            # antidiabetics is set in post
+            # antidiabetics = '0'
+            # if insulin == '1' or other_antidiabetics == '1':
+            #     antidiabetics = '1'
+          '6_1_18':
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/paracetamol_nsaids'
+            read_method:
+              name: 'get_val'
+          '6_1_19':
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/dietary_supplements'
+            read_method:
+              name: 'get_val'
+          # '6_1_18':
+          #   path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/antiparkinsonians'
+          #   read_method:
+          #     name: 'get_val'
+          
+          # new PD meds
+          '6_1_20':
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/levodopa'
+          
+          '6_1_21':
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/pd_agonists'
+          
+          '6_1_22':
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/mao_b_inhibitor'
+          
+          '6_1_23':
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/comt_inhibitor'
+          
+          '6_1_24':
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/dbs'
+          
+          '6_1_25':
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/duodopa_pump'
+          
+          '6_1_26':
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/lecigon_pump'
+          
+          '6_1_27':
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/apomorfin_injection'
+          
+          '6_1_28':
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/apomorfin_pump'
+          
+          pd_meds_improvement:
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/pd_meds_improvement'
+          pd_meds_reaction:
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/pd_meds_reaction'
+          
+          levodopa_dose:
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/levodopa_dose'
+            read_method:
+                name: 'year_command'
+                
+          dbs_year:
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/dbs_year'
+            read_method:
+                name: 'year_command'
+                
+          duodopa_year:
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/duodopa_year'
+            read_method:
+                name: 'year_command'
+                
+          lecigon_year:
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/lecigon_year'
+            read_method:
+                name: 'year_command'
+                
+          apomorfin_year:
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/apomorfin_year'
+            read_method:
+                name: 'year_command'
+                
+
+         
+
+          med_comment:
+            path: 'mh:MedHistData/curMed_abst[@xsi:type=curMedData]/CurMed_com'
+            read_method:
+              name: 'find_text_field'
+
+      ST: # mh:MedHistData/st_abst[@xsi:type=stData]/
+        title: 'Stimulants'
+        variables:
+          Smok:
+            path: 'mh:MedHistData/st_abst[@xsi:type=stData]/Smok'
+            read_method:
+              name: 'get_val'
+          # Alco_unitpweek_1:
+          #   path: 'mh:MedHistData/st_abst[@xsi:type=stData]/Alco_unitpweek_1'
+          #   read_method:
+          #     name: 'get_val'
+          # Alco_unitpweek_2:
+          #   path: 'mh:MedHistData/st_abst[@xsi:type=stData]/Alco_unitpweek_2'
+          #   read_method:
+          #     name: 'get_val'
+          Alco_unitpweek:
+            path: 'mh:MedHistData/st_abst[@xsi:type=stData]/Alco_unitpweek'
+            read_method:
+              name: 'get_number_from_digits'
+              method_kwargs:
+                n_digits: 2
+            # TODO in post
+            # mh:MedHistData/st_abst[@xsi:type=stData]/units
+            # units = ''
+            # units = Alco_unitpweek_1 + Alco_unitpweek_2
+            # units.replace('NULL', '')
+            
+          ## TODO not in XNAT
+          # stimulants_overuse:
+          #   path: 'mh:MedHistData/st_abst[@xsi:type=stData]/stimulants_overuse'
+          #   read_method:
+          #     name: 'get_val'
+          stimulants_overuse_comment:
+            path: 'mh:MedHistData/st_abst[@xsi:type=stData]/st_com'
+            read_method:
+              name: 'find_text_field'
+
+          fast1:
+            path: 'mh:MedHistData/st_abst[@xsi:type=stData]/fast1'
+            read_method:
+              name: 'get_val'
+          fast2:
+            path: 'mh:MedHistData/st_abst[@xsi:type=stData]/fast2'
+            read_method:
+              name: 'get_val'
+          fast3:
+            path: 'mh:MedHistData/st_abst[@xsi:type=stData]/fast3'
+            read_method:
+              name: 'get_val'
+          fast4:
+            path: 'mh:MedHistData/st_abst[@xsi:type=stData]/fast4'
+            read_method:
+              name: 'get_val'
+            # TODO in post
+            # mh:MedHistData/st_abst[@xsi:type=stData]/fast_tot
+            # mh:MedHistData/st_abst[@xsi:type=stData]/fast_score_comp
+            # total_str = ''
+            # if fast1 != 'NULL' and fast2 != 'NULL' and fast3 != 'NULL' and fast4 != 'NULL':
+            #     total_int = int(fast1) + int(fast2) + int(fast3) + int(fast4)
+            #     total_str = str(total_int)
+            # fast_score_comp = '1'
+          fast_tot:
+            path: 'mh:MedHistData/st_abst[@xsi:type=stData]/fast_tot'
+            read_method:
+              name: 'score'
+              method_kwargs:
+                items:
+                  - fast1
+                  - fast2
+                  - fast3
+                  - fast4
+                nullvalue: '-999'
+          fast_score_comp:  
+            path: 'mh:MedHistData/st_abst[@xsi:type=stData]/fast_score_comp'
+            read_method:
+              name: 'constant'
+              method_kwargs:
+                constant_value: '1'
+
+            # TODO in post
+            # join smok_comment and stimulants_overuse_comment to set to 
+            # mh:MedHistData/st_abst[@xsi:type=stData]/st_com
+            # st_com = 'NULL'
+            # smok_comment = self.find_text_field('smok_comment')
+
+      obf: #  mh:MedHistData/obf_abst[@xsi:type=obfData]/
+        title: 'Other bodily functions'
+        variables:   
+          urin_symp:
+            path: 'mh:MedHistData/obf_abst[@xsi:type=obfData]/urin_symp'
+            read_method:
+              name: 'get_val'
+          bowel_symp:
+            path: 'mh:MedHistData/obf_abst[@xsi:type=obfData]/bowel_symp'
+            read_method:
+              name: 'get_val'
+          weightloss:
+            path: 'mh:MedHistData/obf_abst[@xsi:type=obfData]/weightloss'
+            read_method:
+              name: 'get_val'
+          sex_symp:
+            path: 'mh:MedHistData/obf_abst[@xsi:type=obfData]/sex_symp'
+            read_method:
+              name: 'get_val'
+          sleep_symp1:
+            path: 'mh:MedHistData/obf_abst[@xsi:type=obfData]/sleep_symp1'
+            read_method:
+              name: 'get_val'
+          sleep_symp2:
+            path: 'mh:MedHistData/obf_abst[@xsi:type=obfData]/sleep_symp2'
+            read_method:
+              name: 'get_val'
+          P_rbd:
+            path: 'mh:MedHistData/obf_abst[@xsi:type=obfData]/P_rbd'
+            read_method:
+              name: 'get_val'
+          P_rbd_injury:
+            path: 'mh:MedHistData/obf_abst[@xsi:type=obfData]/P_rbd_injury'
+            read_method:
+              name: 'get_val'
+          sleepinterrup:
+            path: 'mh:MedHistData/obf_abst[@xsi:type=obfData]/sleepinterrup'
+            read_method:
+              name: 'get_val'
+          P_restlesslegs_cramps:
+            path: 'mh:MedHistData/obf_abst[@xsi:type=obfData]/P_restlesslegs_cramps'
+            read_method:
+              name: 'get_val'
+          P_apnea:
+            path: 'mh:MedHistData/obf_abst[@xsi:type=obfData]/P_apnea'
+            read_method:
+              name: 'get_val'
+          symp_comment:
+            path: 'mh:MedHistData/obf_abst[@xsi:type=obfData]/obf_com'
+            read_method:
+              name: 'find_text_field'
+
+      GDS:
+        title: 'Geriatric Depression Scale'
+        variables:          
+          gdeps1:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_1'
+          gdeps2:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_2'
+          gdeps3:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_3'
+          gdeps4:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_4'
+          gdeps5:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_5'
+          gdeps6:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_6'
+          gdeps7:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_7'
+          gdeps8:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_8'
+          gdeps9:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_9'
+          gdeps10:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_10'
+          gdeps11:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_11'
+          gdeps12:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_12'
+          gdeps13:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_13'
+          gdeps14:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_14'
+          gdeps15:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_15'
+          gdeps16:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_16'
+          gdeps17:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_17'
+          gdeps18:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_18'
+          gdeps19:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_19'
+          gdeps20:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_20'
+          gdeps21:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_21'
+          gdeps22:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_22'
+          gdeps23:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_23'
+          gdeps24:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_24'
+          gdeps25:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_25'
+          gdeps26:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_26'
+          gdeps27:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_27'
+          gdeps28:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_28'
+          gdeps29:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_29'
+          gdeps30:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds1530_30'
+          gdeps_tot_15:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds_15_total'
+          gdeps_tot_30:
+            path: 'mh:MedHistData/gds_abst[@xsi:type=gdsData]/gds_30_total'
+          
+          
+
+      CMH_INF:
+        title: 'Current medical history INFORMANT'
+        variables:
+          iaiAvailable:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/iaiAvailable'
+          # inf_relation_1
+          # inf_relation_2
+          # inf_relation_3
+          # inf_relation_4
+          ## TODO change inf_relation layout and vars to follow CRF
+          inf_relation:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/inf_relation'
+            read_method:
+              name: 'find_checked'
+              method_kwargs:
+                top: 4
+                value_map:
+                  'inf_relation_1': 'Spouse/cohabitant'
+                  'inf_relation_2': 'Sibling'
+                  'inf_relation_3': 'Children'
+                  'inf_relation_4': 'Friend'
+                  # '4': 'Other'
+          
+          inf_relation_inf_relation_other:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/inf_relation_other'
+            read_method: 
+              name: 'find_text_field'
+          
+          inf_freq:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/inf_freq'
+          inf_com:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/inf_com'
+            read_method: 
+              name: 'find_text_field'
+          I_subcogdec:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_subcogdec'
+          I_concern:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_concern'
+          I_impair:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_impair'
+          # I_1symp_0
+          # I_1symp_1
+          # I_1symp_2
+          # I_1symp_3
+          # I_1symp_4
+          # I_1symp_5
+          # I_1symp_6
+          I_1symp:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_1symp'
+            read_method:
+              name: 'find_checked'
+              method_kwargs:
+                start: 0
+                top: 6 
+          
+          # I_1symp_other is read in post and if there is data sets I_1symp to 7 (other)
+          I_1symp_other:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_1symp_other'
+            read_method:
+              name: 'find_text_field'
+
+          # I_time1symp_1
+          # I_time1symp_2
+          I_time1symp:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_time1symp'
+            read_method:
+              name: 'get_number_from_digits'
+              method_kwargs:
+                n_digits: 2
+
+          I_sudden:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_sudden'
+          I_develop:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_develop'    
+          I_stepwise_deterio:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_stepwise_deterio'
+          I_memo:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_memo'
+          I_langu:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_langu'
+          I_geog:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_geog'
+          I_timeori:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_timeori'
+          ## missing in XNAT
+          I_perso:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_perso'
+          I_iADL:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_iADL'
+          I_worktech:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_worktech'
+          I_TIA_symp:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_TIA_symp'
+          I_park_symp:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_park_symp'
+          I_balance:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_balance'
+          ## TODO not in XNAT
+          # I_other:
+          #   path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_other'
+          I_anxie:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_anxie'
+          I_dep:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_dep'
+          I_hallu:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_hallu'
+          I_hallu_auditory:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_hallu_auditory'
+          I_hallu_visual:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_hallu_visual'
+          I_hallu_tactile:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_hallu_tactile'
+          I_hallu_olfatory:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_hallu_olfatory'
+          I_hallu_gustatory:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_hallu_gustatory'
+          I_emo:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_emo'
+          I_passiv:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_passiv'
+          I_behmotor:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_behmotor'
+          # I_symp_comment: not in XNAT
+            
+          I_mayofluc1:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_mayofluc1'
+          I_mayofluc2:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_mayofluc2'
+          I_mayofluc3:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_mayofluc3'
+          I_mayofluc4:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_mayofluc4'
+          
+          I_mayofluc_tot:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_mayofluc_tot'
+            read_method:
+              name: 'score'
+              method_kwargs:
+                items:
+                  - I_mayofluc1
+                  - I_mayofluc2
+                  - I_mayofluc3
+                  - I_mayofluc4
+          fluc_score_comp:  
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/fluc_score_comp'
+            read_method:
+              name: 'constant'
+              method_kwargs:
+                constant_value: '1'
+          # I_diet_1
+          # I_diet_2
+          I_diet:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_diet'
+            # read_method:
+            #   name: 'find_checked'
+          # I_abuse_1
+          # I_abuse_2
+          I_abuse:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_abuse'
+            read_method:
+              name: 'find_checked'
+          # I_apnea_1
+          # I_apnea_2
+          I_apnea:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_apnea'
+            # read_method:
+            #   name: 'find_checked'
+          # I_rbd_1
+          # I_rbd_2
+          I_rbd:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_rbd'
+            # read_method:
+            #   name: 'find_checked'
+          # I_symp_comment
+          
+          # I_rbd_duration_years_1
+          # I_rbd_duration_years_2
+          I_rbd_duration_years:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_rbd_duration_years'
+            read_method:
+              name: 'get_number_from_digits'
+              method_kwargs: 
+                n_digits: 2
+          
+          I_rbd_injury:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_rbd_injury'
+          I_rbd_injurybedp:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_rbd_injurybedp'
+          I_rbd_defense:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_rbd_defense'
+          I_rbd_matchmov:
+            path: 'mh:MedHistData/cmhinf_abst[@xsi:type=cmhInfData]/I_rbd_matchmov'
+
+      iqcode:
+        title: 'IQCODE Short'
+        variables:
+          iqcode_1:
+            path: 'mh:MedHistData/iqcode_test/IQ_1'
+          iqcode_2:
+            path: 'mh:MedHistData/iqcode_test/IQ_2'
+          iqcode_3:
+            path: 'mh:MedHistData/iqcode_test/IQ_3'
+          iqcode_4:
+            path: 'mh:MedHistData/iqcode_test/IQ_4'
+          iqcode_5:
+            path: 'mh:MedHistData/iqcode_test/IQ_5'
+          iqcode_6:
+            path: 'mh:MedHistData/iqcode_test/IQ_6'
+          iqcode_7:
+            path: 'mh:MedHistData/iqcode_test/IQ_7'
+          iqcode_8:
+            path: 'mh:MedHistData/iqcode_test/IQ_8'
+          iqcode_9:
+            path: 'mh:MedHistData/iqcode_test/IQ_9'
+          iqcode_10:
+            path: 'mh:MedHistData/iqcode_test/IQ_10'
+          iqcode_11:
+            path: 'mh:MedHistData/iqcode_test/IQ_11'
+          iqcode_12:
+            path: 'mh:MedHistData/iqcode_test/IQ_12'
+          iqcode_13:
+            path: 'mh:MedHistData/iqcode_test/IQ_13'
+          iqcode_14:
+            path: 'mh:MedHistData/iqcode_test/IQ_14'
+          iqcode_15:
+            path: 'mh:MedHistData/iqcode_test/IQ_15'
+          iqcode_16:
+            path: 'mh:MedHistData/iqcode_test/IQ_16'
+              
+
+      rss:
+        title: 'Relative Stress Scale'
+        variables:
+          rss_1:
+            ## TODO, add path when created inXNAT as self subjectassessor
+            path: 'mh:MedHistData/rss_test/rss_1'
+          rss_2:
+            ## TODO, add path when created inXNAT as self subjectassessor
+            path: 'mh:MedHistData/rss_test/rss_2'
+          rss_3:
+            ## TODO, add path when created inXNAT as self subjectassessor
+            path: 'mh:MedHistData/rss_test/rss_3'
+          rss_4:
+            ## TODO, add path when created inXNAT as self subjectassessor
+            path: 'mh:MedHistData/rss_test/rss_4'
+          rss_5:
+            ## TODO, add path when created inXNAT as self subjectassessor
+            path: 'mh:MedHistData/rss_test/rss_5'
+          rss_6:
+            ## TODO, add path when created inXNAT as self subjectassessor
+            path: 'mh:MedHistData/rss_test/rss_6'
+          rss_7:
+            ## TODO, add path when created inXNAT as self subjectassessor
+            path: 'mh:MedHistData/rss_test/rss_7'
+          rss_8:
+            ## TODO, add path when created inXNAT as self subjectassessor
+            path: 'mh:MedHistData/rss_test/rss_8'
+          rss_9:
+            ## TODO, add path when created inXNAT as self subjectassessor
+            path: 'mh:MedHistData/rss_test/rss_9'
+          rss_10:
+            ## TODO, add path when created inXNAT as self subjectassessor
+            path: 'mh:MedHistData/rss_test/rss_10'
+          rss_11:
+            ## TODO, add path when created inXNAT as self subjectassessor
+            path: 'mh:MedHistData/rss_test/rss_11'
+          rss_12:
+            ## TODO, add path when created inXNAT as self subjectassessor
+            path: 'mh:MedHistData/rss_test/rss_12'
+          rss_13:
+            ## TODO, add path when created inXNAT as self subjectassessor
+            path: 'mh:MedHistData/rss_test/rss_13'
+          rss_14:
+            ## TODO, add path when created inXNAT as self subjectassessor
+            path: 'mh:MedHistData/rss_test/rss_14'
+          rss_15:
+            ## TODO, add path when created inXNAT as self subjectassessor
+            path: 'mh:MedHistData/rss_test/rss_15'
+
+
+  phyex_data:
+    prefix: 'phyex'
+    xml_name: 'phyex:PhyExamData'
+    title: 'Physical Examination'
+    sections:
+      gse:
+        title: 'General somatic evaluation'
+        variables:
+          bp_recum_sys:
+            path: 'phyex:phyExamData/bp_recum_sys'
+            read_method:
+              name: 'get_number_from_digits'
+              method_kwargs: 
+                n_digits: 3
+          bp_recum_dias:
+            path: 'phyex:phyExamData/bp_recum_dias'
+            read_method:
+              name: 'get_number_from_digits'
+              method_kwargs: 
+                n_digits: 3
+          ## TODO pulse is only entered once in XNAT, need to add the rest
+          # pulse_recum:
+          #   path: 'phyex:phyExamData/pulse_recum'
+          #   read_method:
+          #     name: 'get_number_from_digits'
+          #     method_kwargs: 
+          #       n_digits: 3
+          # remove this one when done
+          pulse_recum:
+            path: 'phyex:phyExamData/pulse'
+            read_method:
+              name: 'get_number_from_digits'
+              method_kwargs: 
+                n_digits: 3
+
+          ## TODO missing in XNAT
+          bp_0m_sys:
+            path: 'phyex:phyExamData/bp_0m_sys'
+            read_method:
+              name: 'get_number_from_digits'
+              method_kwargs: 
+                n_digits: 3
+          bp_0m_dias:
+            path: 'phyex:phyExamData/bp_0m_dias'
+            read_method:
+              name: 'get_number_from_digits'
+              method_kwargs: 
+                n_digits: 3
+          pulse_0m:
+            path: 'phyex:phyExamData/pulse_0m'
+            read_method:
+              name: 'get_number_from_digits'
+              method_kwargs: 
+                n_digits: 3
+
+          bp_1m_sys:
+            path: 'phyex:phyExamData/bp_1m_sys'
+            read_method:
+              name: 'get_number_from_digits'
+              method_kwargs: 
+                n_digits: 3
+          bp_1m_dias:
+            path: 'phyex:phyExamData/bp_1m_dias'
+            read_method:
+              name: 'get_number_from_digits'
+              method_kwargs: 
+                n_digits: 3
+          ## TODO missing in XNAT
+          pulse_1m:
+            path: 'phyex:phyExamData/pulse_1m'
+            read_method:
+              name: 'get_number_from_digits'
+              method_kwargs: 
+                n_digits: 3
+
+          bp_3m_sys:
+            path: 'phyex:phyExamData/bp_3m_sys'
+            read_method:
+              name: 'get_number_from_digits'
+              method_kwargs: 
+                n_digits: 3
+          bp_3m_dias:
+            path: 'phyex:phyExamData/bp_3m_dias'
+            read_method:
+              name: 'get_number_from_digits'
+              method_kwargs: 
+                n_digits: 3
+          
+          pulse_3m:
+            path: 'phyex:phyExamData/pulse_3m'
+            read_method:
+              name: 'get_number_from_digits'
+              method_kwargs: 
+                n_digits: 3
+
+          pulse_reg:
+            path: 'phyex:phyExamData/pulse_reg'
+
+          pulse_notes:
+            path: 'phyex:phyExamData/somatic_com'
+            read_method:
+              name: 'find_text_field'
+          
+          orto_hypotension:
+            path: 'phyex:phyExamData/ortho_hypotension'
+          
+          bradykardi:
+            path: 'phyex:phyExamData/bradycardia'
+          
+          weightloss:
+            path: 'phyex:phyExamData/weightloss'
+
+          lost_kg_1:
+            path: 'phyex:phyExamData/lost_kg'
+
+          height:
+            path: 'phyex:phyExamData/height'
+            read_method:
+              name: 'get_number_from_digits'
+              method_kwargs: 
+                n_digits: 3
+          weight:
+            path: 'phyex:phyExamData/weight'
+            read_method:
+              name: 'get_number_from_digits'
+              method_kwargs: 
+                n_digits: 3
+      
+      neuro:
+        title: 'Neurological exam'
+        variables:
+          timedup_timedup:
+            path: 'phyex:phyExamData/timedup'
+            read_method:
+              name: 'get_number_from_digits'
+              method_kwargs: 
+                n_digits: 2
+
+          aus_hear:
+            path: 'phyex:phyExamData/aus_hear'
+          aus_pulm:
+            path: 'phyex:phyExamData/aus_pulm'
+          aus_carot:
+            path: 'phyex:phyExamData/aus_carot'
+          cranial:
+            path: 'phyex:phyExamData/cranial'
+          coordina:
+            path: 'phyex:phyExamData/coordina'
+          motor:
+            path: 'phyex:phyExamData/motor'
+          reflex:
+            path: 'phyex:phyExamData/reflex'
+          tonus:
+            path: 'phyex:phyExamData/tonus'
+          sensor:
+            path: 'phyex:phyExamData/sensor'
+          primitive:
+            path: 'phyex:phyExamData/primitive'
+          posture_gait:
+            path: 'phyex:phyExamData/posture_gait'
+          clinic_comment:
+            path: 'phyex:phyExamData/neuroex_com'
+            read_method:
+              name: 'find_text_field'
+      # 
+          #--> Not defined in X
+          # updrs_total_updrs_total_1
+          # updrs_total_updrs_total_2
+          updrs_total_updrs_total:
+            path: 'phyex:phyExamData/updrs_tot'
+            read_method:
+              name: 'get_number_from_digits'
+              method_kwargs: 
+                n_digits: 2
+
+          # not in xnat
+          # tug_notes
+
+  cs_data:
+    prefix: 'cs'
+    xml_name: 'cs:cogScrData'
+    title: 'Cognitive Screening'
+    sections:
+      cs:
+        title: 'Cognitive Screening'
+        variables:
+          mmse_total_1:
+            path: 'cs:cogScrData/mmse_abst[@xsi:type=mmseData]/MMSE_Total'
+          # CERAD_Trial1_1
+          # CERAD_Trial1_2
+          # CERAD_Trial2_1
+          # CERAD_Trial2_2
+          # CERAD_Trial3_1
+          # CERAD_Trial3_2
+          # CERAD_learning_text_1
+          # CERAD_learning_text_2
+          CERAD_learning_1:
+            path: 'cs:cogScrData/cerad_abst[@xsi:type=ceradData]/CERAD_Learning'
+          # CERAD_Recall_text_1
+          # CERAD_Recall_text_2
+          CERAD_Recall_1:
+            path: 'cs:cogScrData/cerad_abst[@xsi:type=ceradData]/CERAD_Recall'
+          # CERAD_Recog_1
+          # CERAD_Recog_2
+          CERAD_Recog_1:
+            path: 'cs:cogScrData/cerad_abst[@xsi:type=ceradData]/CERAD_Recog'
+          # clock_score_text_1
+          # clock_score_text_2
+          clock_score_1:
+            path: 'cs:cogScrData/cdt_abst[@xsi:type=cdtData]/Clock_score'
+          # vosp_total_text_1
+          # vosp_total_text_2
+          vosp_total_1:
+            path: 'cs:cogScrData/vosp_abst[@xsi:type=vospData]/VOSP_Total'
+
+          tmta_sec:
+            path: 'cs:cogScrData/tmt_abst[@xsi:type=tmtData]/TMTA_Sec'
+            read_method:
+              name: 'get_number_from_digits'
+              method_kwargs: 
+                n_digits: 3
+
+          tmta_mistake_tmta_mistake:
+            path: 'cs:cogScrData/tmt_abst[@xsi:type=tmtData]/TMTA_Mistake'
+            read_method:
+              name: 'get_number_from_digits'
+              method_kwargs: 
+                n_digits: 2
+          tmta_completed:
+            path: 'cs:cogScrData/tmt_abst[@xsi:type=tmtData]/TMTA_Failed'
+
+          tmtb_sec:
+            path: 'cs:cogScrData/tmt_abst[@xsi:type=tmtData]/TMTB_Sec'
+            read_method:
+              name: 'get_number_from_digits'
+              method_kwargs: 
+                n_digits: 3
+          
+           
+          tmtb_mistake_tmtb_mistake:
+            path: 'cs:cogScrData/tmt_abst[@xsi:type=tmtData]/TMTB_Mistake'
+            read_method:
+              name: 'get_number_from_digits'
+              method_kwargs: 
+                n_digits: 2
+          tmtb_completed:
+            path: 'cs:cogScrData/tmt_abst[@xsi:type=tmtData]/TMTB_Failed'
+
+          COWAT_Total:
+            path: 'cs:cogScrData/cowat_abst[@xsi:type=cowatData]/COWAT_Total'
+            read_method:
+              name: 'get_number_from_digits'
+              method_kwargs: 
+                n_digits: 3
+
+          CDR_Mem:
+            path: 'cs:cogScrData/cdr_abst[@xsi:type=cdrData]/CDR_Mem'
+            read_method:
+              name: 'val_map'
+              method_kwargs:
+                value_mapping:
+                  '0': '0'
+                  '50': '0.5'
+                  '1': '1'
+                  '2': '2'
+                  '3': '3'
+                  '4': '4'
+                  '5': '5'
+          CDR_Orien:
+            path: 'cs:cogScrData/cdr_abst[@xsi:type=cdrData]/CDR_Orien'
+            read_method:
+              name: 'val_map'
+              method_kwargs:
+                value_mapping:
+                  '0': '0'
+                  '50': '0.5'
+                  '1': '1'
+                  '2': '2'
+                  '3': '3'
+                  '4': '4'
+                  '5': '5'
+          CDR_Judg:
+            path: 'cs:cogScrData/cdr_abst[@xsi:type=cdrData]/CDR_Judg'
+            read_method:
+              name: 'val_map'
+              method_kwargs:
+                value_mapping:
+                  '0': '0'
+                  '50': '0.5'
+                  '1': '1'
+                  '2': '2'
+                  '3': '3'
+                  '4': '4'
+                  '5': '5'
+          CDR_Commun:
+            path: 'cs:cogScrData/cdr_abst[@xsi:type=cdrData]/CDR_Commun'
+            read_method:
+              name: 'val_map'
+              method_kwargs:
+                value_mapping:
+                  '0': '0'
+                  '50': '0.5'
+                  '1': '1'
+                  '2': '2'
+                  '3': '3'
+                  '4': '4'
+                  '5': '5'
+          CDR_Home:
+            path: 'cs:cogScrData/cdr_abst[@xsi:type=cdrData]/CDR_Home'
+            read_method:
+              name: 'val_map'
+              method_kwargs:
+                value_mapping:
+                  '0': '0'
+                  '50': '0.5'
+                  '1': '1'
+                  '2': '2'
+                  '3': '3'
+                  '4': '4'
+                  '5': '5'
+          CDR_PC:
+            path: 'cs:cogScrData/cdr_abst[@xsi:type=cdrData]/CDR_PC'
+            read_method:
+              name: 'val_map'
+              method_kwargs:
+                value_mapping:
+                  '0': '0'
+                  '50': '0.5'
+                  '1': '1'
+                  '2': '2'
+                  '3': '3'
+                  '4': '4'
+                  '5': '5'
+          CDR_total:
+            path: 'cs:cogScrData/cdr_abst[@xsi:type=cdrData]/CDR_Total'
+            read_method:
+              name: 'val_map'
+              method_kwargs:
+                value_mapping:
+                  '0': '0'
+                  '50': '0.5'
+                  '1': '1'
+                  '2': '2'
+                  '3': '3'
+                  '4': '4'
+                  '5': '5'
+          
+          sum_boxes:
+            path: 'cs:cogScrData/cdr_abst[@xsi:type=cdrData]/Sum_Boxes'
+            read_method:
+                name: 'score'
+                method_kwargs:
+                  items:
+                    - CDR_Mem
+                    - CDR_Orien
+                    - CDR_Judg
+                    - CDR_Commun
+                    - CDR_Home
+                    - CDR_PC
+                  number_type: 'float'
+          
+          moca_total:
+            path: 'cs:cogScrData/moca_total'
+          # normal CS comes from the staging section in the CRF
+          ## TODO missing in XNAT
+          # normal_cs_manual:
+          #   path: 'cs:cogScrData/normal_cs_manual'
+          #   read_method:
+          #     name: 'find_checked_value'
+          #     method_kwargs:
+          #       items:
+          #         - 'stag_normal_cs'
+          #         - 'stag_not_normal_cs'
+            
+  diag_data:
+    prefix: 'diag'
+    xml_name: 'diag:DiagnosisData'
+    title: 'Diagnosis'
+    sections:
+      diag:
+        title: 'Staging and etiology'
+        variables:
+          # The symptom group / control group in diag is not in XNAT, 
+          # subj_group:
+          # n
+          
+          stag_scd_symptoms:
+            path: 'diag:DiagnosisData/scd_symptoms'
+            read_method:
+              name: 'find_checked_value'
+              method_kwargs:
+                items:
+                  - 'stag_scd_symptoms'
+                  - 'stag_no_scd_symptoms'
+          
+          stag:
+            path: 'diag:DiagnosisData/stag'
+            read_method:
+              name: 'find_checked_value'
+              method_kwargs:
+                items:
+                - 'stag_scd'
+                - 'stag_mci'
+                - 'stag_dementia'
+                - 'stag_other'
+
+          diag:
+            path: 'diag:DiagnosisData/diag'
+            read_method:
+                name: 'find_checked_value'
+                method_kwargs:
+                  items:
+                  - 'diag'
+                  - 'diag_etiology'
+                  - 'diag_vascular'
+                  - 'diag_lewy'
+                  - 'diag_frontotemporal'
+                  - 'diag_blandet'
+                  - 'diag_other'
+          diag_park:
+            path: 'diag:DiagnosisData/diag_park'
+          diag_other_text:
+            path: 'diag:DiagnosisData/diag_other_text'
+            read_method: 
+              name: 'find_text_field'
+          diag_other_text:
+            path: 'diag:DiagnosisData/diag_com'
+            read_method:
+              name: 'find_text_field'
+
+  mrrep_data:
+    prefix: 'mrrep'
+    xml_name: 'mrrep:MRIReportData'
+    title: 'MRI Report'
+    sections:
+      report:
+        title: 'Report data'
+        variables:
+          # mr
+          gca:
+            path: 'mrrep:MRIReportData/mri_glob_cereb_atro'
+          fazekas:
+            path: 'mrrep:MRIReportData/mri_fazekas'
+          mta_r:
+            path: 'mrrep:MRIReportData/mri_mta_right'
+          
+          mta_l:
+            path: 'mrrep:MRIReportData/mri_mta_left'
+            #col: 977
+          ## TODO not in XNAT
+          pa:
+            path: 'mrrep:MRIReportData/koedam_pa_score'
+          # mr_comment
+
+  ## summary data that it is not in XNAT
+  # fdg_pet
+  # amypet
+  # perfusion_spect
+  # eeg
+  # datscan
+  # paraclinical_comment
+  # csf_done
+  # abeta
+  # ttau
+  # csf_ref
+  # ptau
+  # summary_comment
+  cover_data:
+    prefix: 'cover'
+    xml_name: 'cover:CoverData'
+    title: 'Cover'
+    sections:
+      cover:
+        title: 'Cover data'
+        variables:
+          exclusion:
+            path: 'cover:CoverData/exclusion'
+          # exclusion_date_day_1
+          # exclusion_date_day_2
+          # exclusion_date_month_1
+          # exclusion_date_month_2
+          # exclusion_date_year_1
+          # exclusion_date_year_2
+          # exclusion_date_year_3
+          # exclusion_date_year_4
+          # stag_date_same_as_main
+          # exclusion_date_day
+          # exclusion_date_month
+          # exclusion_date_year_1
+          exclusion_date:
+            path: 'cover:CoverData/exclusion_date'
+            read_method:
+              name: 'get_date'
+
+          exclusion_reason:
+            path: 'cover:CoverData/exclusion_reason'
+            read_method:
+              name: 'find_text_field'
+
+  mds_data:
+    prefix: 'mds'
+    xml_name: 'mds:MDSData'
+    title: 'MDS'
+    sections:
+      mds:
+        title: 'MDS data'
+        variables:
+          mds_park:
+            path: 'mds:MDSData/mds_park'
+          
+          mds_abs_excl:
+            path: 'mds:MDSData/mds_abs_excl'
+          
+          mds_n_redflags_1:
+            path: 'mds:MDSData/mds_n_redflags'
+          
+          mds_n_supportive_1:
+            path: 'mds:MDSData/mds_n_supportive'
+          
+          mds_2_supportive:
+            path: 'mds:MDSData/mds_2_supportive'
+          
+          mds_2_redflags:
+            path: 'mds:MDSData/mds_2_redflags'
+          
+          mds_redflags_eqless_supportive:
+            path: 'mds:MDSData/mds_redflags_eqless_supportive'
+
+  
+  
+

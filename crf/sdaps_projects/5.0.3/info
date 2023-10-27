@@ -1,0 +1,28 @@
+[sdaps]
+title = CRF - Clinical Report Form - Baseline \crfversion
+global_id = OMRCRFv5.0.3
+
+[info]
+Author = \@latex@warning@no@line {No \noexpand \author given}
+assessment = 1
+
+[defs]
+# These values are not read back, they exist for information only!
+paper_width = 210.0
+paper_height = 297.0
+print_questionnaire_id = False
+print_survey_id = True
+style = qr
+duplex = False
+checkmode = checkcorrect
+corner_mark_left = 10.0
+corner_mark_right = 10.0
+corner_mark_top = 12.0
+corner_mark_bottom = 12.0
+engine = pdflatex
+
+[questionnaire]
+# These values are not read back, they exist for information only!
+page_count = 60
+survey_id = 2998541532
+

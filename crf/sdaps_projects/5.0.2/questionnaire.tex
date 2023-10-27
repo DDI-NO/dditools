@@ -1,0 +1,3100 @@
+\documentclass[pdf,  style=code128, globalid=OMRCRFv5.0.2, english, stamp, pagemark, oneside]{sdapsclassic}
+
+%% Using Sans Serif
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+% \usepackage[utf8]{inputenc}
+% \usepackage{ulem}
+% \usepackage[T1]{fontenc}
+% \usepackage[english, norsk]{babel}
+\usepackage{ifxetex}
+\ifxetex
+\else
+  \usepackage[utf8]{inputenc}
+\fi
+\usepackage{ulem}
+\usepackage{babel}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{tabu}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage[many]{tcolorbox}
+% \usepackage[strict]{changepage}
+
+\graphicspath{{/workdir/images/}}
+
+\def \crfversion{5.0.2}
+\addinfo{crfversion}{\crfversion}
+
+\ExplSyntaxOn
+\let\mysetcheckboxtype\sdaps_checkbox_set_type:n
+\let\qbegin\sdaps_qobject_begin:nnn
+\let\mycheckbox\sdaps_checkbox:nn
+\let\myanswer\sdaps_answer:n
+\let\qend\sdaps_qobject_end:n
+\let\mytextbox\sdaps_textbox_hstretch:nnnnn
+\let\qhead\_sdaps_classic_question
+\let\appendvar\sdaps_qobject_append_var:n
+
+\newcommand{\inlinefilltextbox}[2]{
+  \sdaps_qobject_begin:nnn { inlinetextbox } { Text } { #2 }
+
+  \dim_set:Nn \l_tmpa_dim { #1 }
+  \dim_set:Nn \l_tmpb_dim { #1 }
+  \dim_set:Nn \l_tmpa_dim { 0.5 \l_tmpa_dim - 0.8ex }
+  \dim_set:Nn \l_tmpb_dim { 0.5 \l_tmpb_dim + 0.8ex }
+  \sdaps_textbox_hstretch:nVVnn { #2 } \l_tmpa_dim \l_tmpb_dim { 1pt } { 1 }
+
+  \sdaps_qobject_end:n { inlinetextbox }
+}
+\newcommand{\inlinefilltextboxorange}[2]{
+  \sdaps_qobject_begin:nnn { inlinetextbox } { Text } { #2 }
+
+  \dim_set:Nn \l_tmpa_dim { #1 }
+  \dim_set:Nn \l_tmpb_dim { #1 }
+  \dim_set:Nn \l_tmpa_dim { 0.5 \l_tmpa_dim - 0.8ex }
+  \dim_set:Nn \l_tmpb_dim { 0.5 \l_tmpb_dim + 0.8ex }
+  \color{orange}
+  \sdaps_textbox_hstretch:nVVnn { #2 } \l_tmpa_dim \l_tmpb_dim { 1pt } { 1 }
+  \color{black}
+  \sdaps_qobject_end:n { inlinetextbox }
+}
+\ExplSyntaxOff
+
+\newcommand{\writteninput}[1]{
+    \color{orange}
+    \qbegin{writteninput}{Text}{}
+      \mytextbox{#1}{3mm}{7mm}{50mm}{0}
+    \qend{writteninput}
+
+    \color{black}
+}
+
+\ExplSyntaxOn
+\newcommand{\writtendigits}[2]{
+    \color{orange}
+    \qbegin{writtendigits}{Text}{}
+      \int_step_inline:nnnn { 1 } { 1 } { #2 } { \mytextbox{#1_##1}{3mm}{7mm}{7mm}{0}  \int_compare:nT { ##1 < #2 } { ~ } }
+    \qend{writtendigits}
+    \color{black}
+}
+\ExplSyntaxOff
+
+\newcommand{\writtendate}[1]{
+    \color{orange}
+    \qbegin{writtendate}{Text}{}
+     \mytextbox{#1_day_1}{3mm}{7mm}{7mm}{0} \mytextbox{#1_day_2}{3mm}{7mm}{7mm}{0} / \mytextbox{#1_month_1}{3mm}{7mm}{7mm}{0} \mytextbox{#1_month_2}{3mm}{7mm}{7mm}{0} /
+     \mytextbox{#1_year_1}{3mm}{7mm}{7mm}{0} \mytextbox{#1_year_2}{3mm}{7mm}{7mm}{0} \mytextbox{#1_year_3}{3mm}{7mm}{7mm}{0} \mytextbox{#1_year_4}{3mm}{7mm}{7mm}{0}
+     \qend{writtendate}
+    \color{black}
+    \\
+}
+
+\newcommand{\threedigits}[2]{
+  \begin{choicegroup}[colsep=2pt,singlechoice, noalign,  var=#1]{#2}
+    \choice[val=0]{0}
+    \choice[val=1]{1}
+    \choice[val=2]{2}
+    \choice[val=3]{3}
+    \choice[val=4]{4}
+    \choice[val=5]{5}
+    \choice[val=6]{6}
+    \choice[val=7]{7}
+    \choice[val=8]{8}
+    \choice[val=9]{9}
+    \question[var=1]{}
+    \question[var=2]{}
+    \question[var=3]{}
+  \end{choicegroup}
+}
+
+\newcommand{\yearcommand}[2]{
+\begin{choicegroup}[singlechoice, noalign,  var=#1]{#2}
+	\choice[val=0]{0}
+	\choice[val=1]{1}
+	\choice[val=2]{2}
+	\choice[val=3]{3}
+	\choice[val=4]{4}
+	\choice[val=5]{5}
+	\choice[val=6]{6}
+	\choice[val=7]{7}
+	\choice[val=8]{8}
+	\choice[val=9]{9}
+	\question[var=year_1, range={1,2}]{}
+	\question[var=year_2, range={0,9}]{}
+	\question[var=year_3]{}
+	\question[var=year_4]{}
+\end{choicegroup}
+}
+\newcommand{\twodigits}[2]{
+	\begin{choicegroup}[colsep=2pt, singlechoice, noalign,  var=#1]{#2}
+		\choice[val=0]{0}
+		\choice[val=1]{1}
+		\choice[val=2]{2}
+		\choice[val=3]{3}
+		\choice[val=4]{4}
+		\choice[val=5]{5}
+		\choice[val=6]{6}
+		\choice[val=7]{7}
+		\choice[val=8]{8}
+		\choice[val=9]{9}
+		\question[var=#1_1]{}
+		\question[var=#1_2]{}
+	\end{choicegroup}
+}
+\newcommand{\twodigitstext}[2]{
+  %\question{#2}
+#2
+  \writtendigits{#1_text}{2}\\
+	\begin{choicegroup}[colsep=2pt, singlechoice, noalign]{}
+		\choice[val=0]{0}
+		\choice[val=1]{1}
+		\choice[val=2]{2}
+		\choice[val=3]{3}
+		\choice[val=4]{4}
+		\choice[val=5]{5}
+		\choice[val=6]{6}
+		\choice[val=7]{7}
+		\choice[val=8]{8}
+		\choice[val=9]{9}
+		\question[var=#1_1]{}
+		\question[var=#1_2]{}
+	\end{choicegroup}
+}
+\newcommand{\datequestion}[2]{
+\begin{choicegroup}[colsep=2pt,singlechoice, noalign, var=#1]{#2}
+	\choice[val=0]{0}
+	\choice[val=1]{1}
+	\choice[val=2]{2}
+	\choice[val=3]{3}
+	\choice[val=4]{4}
+	\choice[val=5]{5}
+	\choice[val=6]{6}
+	\choice[val=7]{7}
+	\choice[val=8]{8}
+	\choice[val=9]{9}
+	\choice[val=10]{10}
+	\choice[val=11]{11}
+	\choice[val=12]{12}
+	\choice[val=13]{13}
+	\choice[val=14]{14}
+	\choice[val=15]{15}
+	\choice[val=16]{16}
+	\choice[val=17]{17}
+	\choice[val=18]{18}
+	\choice[val=19]{19}
+	\choice[val=20]{20}
+	\choice[val=21]{21}
+	\choice[val=22]{22}
+	\choice[val=23]{23}
+	\choice[val=24]{24}
+	\choice[val=25]{25}
+	\choice[val=26]{26}
+	\choice[val=27]{27}
+	\choice[val=28]{28}
+	\choice[val=29]{29}
+	\choice[val=30]{30}
+	\choice[val=31]{31}
+	\question[var=day, range={1,...,31}]{Dag}
+	\question[var=month, range={1,...,12}]{Måned}
+	\question[var=year_1, range={...,10}]{År}
+	\question[var=year_2, range={...,10}]{}
+	\question[var=year_3, range={...,10}]{}
+	\question[var=year_4, range={...,10}]{}
+\end{choicegroup}
+}
+
+\newcommand{\yesno}[2]{
+	\begin{optionquestion}[cols=1, var=#1]{#2}
+		\choiceitem[val=1]{Ja}
+		\choiceitem[val=0]{Nei}
+	\end{optionquestion}
+}
+\newcommand{\yesnoblue}[2]{
+	\begin{optionquestion}[cols=1, var=#1]{#2}
+		\choiceitem[val=1]{\textcolor{blue}{Ja}}
+		\choiceitem[val=0]{\textcolor{blue}{Nei}}
+	\end{optionquestion}
+}
+\newcommand{\yesnona}[2]{
+	\begin{optionquestion}[cols=1, var=#1]{#2}
+		\choiceitem[val=1]{Ja}
+		\choiceitem[val=0]{Nei}
+		\choiceitem[val=-999]{Ukjent}
+	\end{optionquestion}
+}
+
+% A LaTeX command to render a whole Sibling section.
+\newcommand{\sibling}[1]{
+\vspace{5mm}
+{\large \textbf{Søsken #1}}
+\begin{choicequestion}[cols=1, var=sibling_#1_gen, singlechoice]{Kjønn}
+	\choiceitem[val=0]{Mann}
+	\choiceitem[val=1]{Kvinne}
+\end{choicequestion}
+\yearcommand{sibling_#1_yob}{Fødselsår}
+
+	\begin{optionquestion}[cols=1, var=sibling_#1_ci]{Kognitive problemer?}
+		\choiceitem[val=1]{Ja}
+		\choiceitem[val=0]{Nei}
+		\choiceitem[val=-999]{Ukjent}
+	\end{optionquestion}
+
+
+	\begin{optionquestion}[cols=1, var=sibling_#1_dem]{Demens?}
+		\choiceitem[val=1]{Ja}
+		\choiceitem[val=0]{Nei}
+		\choiceitem[val=-999]{Ukjent}
+	\end{optionquestion}
+
+	\yesnona{sibling_#1_cardiovasc}{Kardiovaskulær sykdom?}
+
+	\twodigits{sibling_#1_age1symp}{Alder ved debut av ev. kardiovaskulær sykdom}
+
+
+\textbox*[var=sibling_#1_other]{3cm}{Annen relevant sykdom, oppgi ev. alder ved debut}
+}
+
+\ExplSyntaxOn
+\newcommand{\yesnocom}[2]{
+    \sdaps_qobject_begin:nnn {  } { Option } {#2}
+		\sdaps_qobject_append_var:n {#2}
+        \sdaps_checkbox_set_type:n {singlechoice}
+        #1 &
+		\sdaps_answer:n { #2} \sdaps_checkbox:nn {} {1}  &
+        \sdaps_answer:n { #2} \sdaps_checkbox:nn {} {0}  &
+        \inlinefilltextbox{1.2cm}{#2_comment} \\[0.8cm]
+
+    \sdaps_qobject_end:n {  }
+}
+\ExplSyntaxOff
+
+\newcommand{\captionpagehuge}[1]{
+  \newpage
+
+  \vspace*{\fill}
+  \begin{center}
+    \huge \textbf{#1}\\[2em]
+
+  \end{center}
+  \vspace*{\fill}
+
+  \newpage
+}
+
+\newcommand{\captionpagelarge}[1]{
+  \newpage
+
+  \vspace*{\fill}
+  \begin{center}
+    \large \textbf{#1}\\[2em]
+
+  \end{center}
+  \vspace*{\fill}
+
+  \newpage
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Doesn't look like we have much options for the title, as is used through all the document
+\title{CRF - Clinical Report Form - Baseline \crfversion}
+
+\begin{document}
+
+  \begin{questionnaire}
+  \ifoot{\thepage}
+% New front page
+      \begin{center}
+           \Huge \textbf{Protokoll for klinisk utredning av kognitiv svikt}
+      \end{center}
+      \section{Cover}
+
+  % \qhead{Identifikasjon}
+  %
+  %     Studienr HUK
+  %     \qbegin{huk}{Text}{huk}
+  %       \mytextbox{HUK_1}{3mm}{7mm}{7mm}{0}
+  %       \mytextbox{HUK_2}{3mm}{7mm}{7mm}{0}
+  %       \mytextbox{HUK_3}{3mm}{7mm}{7mm}{0}
+  %       \mytextbox{HUK_4}{3mm}{7mm}{7mm}{0} .
+  %       \mytextbox{HUK_5}{3mm}{7mm}{7mm}{0}
+  %     \qend{huk}
+
+  Dette dokumentet er klart for skanning og maskinlesing \qbegin{ready}{Option}{}
+  \mysetcheckboxtype{singlechoice}
+    \myanswer{} \mycheckbox{}{}
+  \qend{ready}
+  \begin{tcolorbox}
+    \small{Tekstbokser med \textcolor{orange}{oransje} kantfarge trenger ikke fylles ut, men er ment for kladd, slik at man i fred og ro kan fullføre avkryssing} \normalsize
+  \end{tcolorbox}
+
+  \textbox*[var=ident_text]{2cm}{Identifikasjon}
+
+  \qhead{Dato}
+    \writtendate{date}\\
+    \small
+    \begin{choicegroup}[colsep=2pt,singlechoice, noalign, var=date]{}
+      \choice[val=0]{0}
+      \choice[val=1]{1}
+      \choice[val=2]{2}
+      \choice[val=3]{3}
+      \choice[val=4]{4}
+      \choice[val=5]{5}
+      \choice[val=6]{6}
+      \choice[val=7]{7}
+      \choice[val=8]{8}
+      \choice[val=9]{9}
+      \choice[val=10]{10}
+      \choice[val=11]{11}
+      \choice[val=12]{12}
+      \choice[val=13]{13}
+      \choice[val=14]{14}
+      \choice[val=15]{15}
+      \choice[val=16]{16}
+      \choice[val=17]{17}
+      \choice[val=18]{18}
+      \choice[val=19]{19}
+      \choice[val=20]{20}
+      \choice[val=21]{21}
+      \choice[val=22]{22}
+      \choice[val=23]{23}
+      \choice[val=24]{24}
+      \choice[val=25]{25}
+      \choice[val=26]{26}
+      \choice[val=27]{27}
+      \choice[val=28]{28}
+      \choice[val=29]{29}
+      \choice[val=30]{30}
+      \choice[val=31]{31}
+      \question[var=day, range={1,...,31}]{Dag}
+      \question[var=month, range={1,...,12}]{Måned}
+      \question[var=year_1, range={...,9}]{År 202[?]}
+    \end{choicegroup}
+    \normalsize
+
+
+
+
+
+      % \yesno{sent_scanning_dips}{Protokoll for utredning sendt til scanning i DIPS}
+      % \vspace{0.5cm}
+      \begin{choicequestion}[cols=1, var=signed]{Har signert samtykke til studiedeltakelse}
+        \ExplSyntaxOn
+          \sdaps_checkbox_set_type:n {singlechoice}
+        \ExplSyntaxOff
+        \choiceitem[val=0]{Generel biobank og helseregister}
+       \choiceitem[val=1]{DDI}
+       \choiceitemtext{1cm}{1}{Annen:}
+       \choiceitem[val=2]{Ønsker \textbf{ikke} å inkluderes i studie}
+      \end{choicequestion}
+
+      \begin{optionquestion}[cols=1, var=protocol_db]{Protokollen skal legges inn i forskningsdatabase}
+         \choiceitem{}
+       \end{optionquestion}
+
+      % \breaksection{}
+      \section{Denne bolken gjelder kun dersom personen også skal inkluderes i en forskningsstudie}
+      % \textbf{}
+
+
+          \ExplSyntaxOn
+          \newcommand{\idprefix}[2]{
+          #1
+          \sdaps_answer:n { idprefix} \sdaps_checkbox:nn {} {#2}
+          }
+
+          \newcommand{\iddigits}[1]{
+            \sdaps_qobject_begin:nnn {iddigits}{Option}{iddigits~#1}
+            \sdaps_checkbox_set_type:n {singlechoice}
+
+            \int_step_inline:nnnn { 0 } { 1 } { 9 } {\sdaps_answer:n { 1_##1} \sdaps_checkbox:nn{2_##1}{} & }
+            \sdaps_qobject_end:n {iddigits}
+          }
+
+          \newcommand{\idheader}{
+              & \int_step_inline:nnnn { 0 } { 1 } { 9 } { ##1 & }
+              & \int_step_inline:nnnn { 0 } { 1 } { 9 } { ##1 & }
+              & \int_step_inline:nnnn { 0 } { 1 } { 9 } { ##1 & } \\
+          }
+          \ExplSyntaxOff
+
+          \qhead{Person-ID}
+          % Setup is as follows:
+          % - One Header/Section to group all of these questions,
+          %   this mostly affects numbering but is also used later.
+          % - One Option question for the first column (idprefix). The checkboxes
+          %   are pre-defined and stored into LaTeX boxes. The question is then
+          %   ended before the boxes are placed into the document.
+          % - Change the variable to get an iddigits prefix for all remaining
+          %   questions in this section/group/context.
+          % - Place the pre-defined boxes and define the other questions in-place.
+          %   Note that the pre-defined boxes must only be used exactly once.
+          \qbegin{sid}{Head}{Subject ID}
+
+            \qbegin{idprefix}{Option}{idprefix}
+              \ExplSyntaxOn
+              \sdaps_qobject_append_var:n {idprefix}
+              \sdaps_checkbox_set_type:n {singlechoice}
+              \ExplSyntaxOff
+              \newbox\boxda \newbox\boxdb \newbox\boxdc \newbox\boxdd \newbox\boxde \newbox\boxdf \newbox\boxdg \newbox\boxdh
+              \savebox\boxda{\mbox{\idprefix{D10 }{10}}}
+              \savebox\boxdb{\mbox{\idprefix{D13 }{13}}}
+              \savebox\boxdc{\mbox{\idprefix{D20 }{20}}}
+              \savebox\boxdd{\mbox{\idprefix{D21 }{21}}}
+              \savebox\boxde{\mbox{\idprefix{D22 }{22}}}
+              \savebox\boxdf{\mbox{\idprefix{D23 }{23}}}
+              \savebox\boxdg{\mbox{\idprefix{D30 }{30}}}
+              \savebox\boxdh{\mbox{\idprefix{D40 }{40}}}
+            \qend{idprefix}
+
+            \ExplSyntaxOn
+            \sdaps_qobject_append_var:n {iddigits}
+            \ExplSyntaxOff
+            \setlength{\tabcolsep}{2pt}
+            \begin{tabular}{l cccccccccc c cccccccccc c cccccccccc c}
+                \idheader
+                \unhbox\boxda &\iddigits{1} & \iddigits{2} & \iddigits{3}\\
+                \unhbox\boxdb \\
+                \unhbox\boxdc \\
+                \unhbox\boxdd \\
+                \unhbox\boxde \\
+                \unhbox\boxdf \\
+                \unhbox\boxdg \\
+                \unhbox\boxdh
+            \end{tabular}
+          \qend{sid}
+
+          % \yesno{subject_includes}{Ønsker å inkluderes i studie}
+
+          % \yesno{signed}{Har signert samtykke til studiedeltakelse}
+
+          % \qbegin{ssigned}{Text}
+          %   Annen: \mytextbox{study_signed}{3mm}{7mm}{50mm}{0}
+          % \qend{ssigned}
+
+          \yesno{sent_scanning_xnat}{Protokoll vidersendt til studieansvarlig}
+
+
+			% \begin{center}
+			% 		 \Huge \textbf{Utredning av kognitiv svikt} \\
+      %      \huge \textbf{Undersøkelse ved baseline}
+			% \end{center}
+
+
+    % \section{Administrativ}
+
+
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \textbox*[var=other_id]{1cm}{Annen ID}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \textbox*[var=initials]{1cm}{Deltakers initialer}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+      \addinfo{assessment}{1}
+
+     \begin{optionquestion}[cols=1, var=study]{Deltatt i intervensjonsstudie}
+   		\choiceitem[val=0]{Nei}
+      \choiceitem[val=1]{Ja, hvilken}
+   	\end{optionquestion}
+
+     \inlinefilltextbox{2cm}{study_comment}
+
+     \begin{optionquestion}[cols=2, var=placebo_active]{Dersom deltatt i intervensjonsstudie}
+      \choiceitem{Placebo}
+      \choiceitem{Active substance}
+      \choiceitem{Unknown}
+    \end{optionquestion}
+
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \begin{choicequestion}[cols=2, var=site]{Sted}
+        \mysetcheckboxtype{singlechoice}
+      \choiceitem{Ahus}
+      \choiceitem{Bergen}
+      \choiceitem{Haugesund}
+      \choiceitem{Stavanger}
+      \choiceitem{Tromsø}
+      \choiceitem{Trondheim}
+      \choiceitem{Stavanger}
+      \choiceitemtext{1cm}{2}{Annet:}
+    \end{choicequestion}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \textbox*[var=test_leader]{1cm}{Testleder (TL)}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \newpage
+    \textbf{Baseline info ved inklusjon til forskningstudie}
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \begin{optionquestion}[cols=2, var=subj_group]{Inklusjonsgruppe}
+      %\choiceitem{Inkludert som person med symptomer}
+      \choiceitem{Kognitive sympotomer}
+      \choiceitem{Nevropsykiatriske symptomer}
+      \choiceitem{Parkinsonisme}
+      \choiceitem{Inkludert som kontroll}
+      \choiceitem{Included as control subject, 1st degree relative with dementa}
+    \end{optionquestion}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \begin{choicequestion}[cols=2, var=recruit]{Rekrutteringsmetode}
+      \mysetcheckboxtype{singlechoice}
+      \choiceitem[val=1]{Henvist spesialist}
+      \choiceitem[val=0]{Annonse}
+      \choiceitem[val=3]{Samboer/ektefelle}
+      \choiceitem[val=2]{Overført fra annen studie}
+      \choiceitemtext{1cm}{2}{Annet:}
+    \end{choicequestion}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \textbox*[var=reference_comment]{1.5cm}{Henvisningsårsak}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \textbox*[var=recruit_comment]{1.5cm}{Ev. kommentar}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %	    BASELINE                        %
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+    \section{Baseline info}
+
+
+
+    \begin{multicols}{2}
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        \begin{choicequestion}[cols=1, var=gender, singlechoice]{Kjønn}
+    	  \choiceitem[val=0]{Mann}
+    	  \choiceitem[val=1]{Kvinne}
+    	\end{choicequestion}
+    	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    	\begin{choicequestion}[cols=1, var=handedness, singlechoice]{Håndbruk}
+    		\choiceitem[val=0]{Høyrehendt}
+    		\choiceitem[val=1]{Venstrehendt}
+    	\end{choicequestion}
+    	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \end{multicols}
+
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\qhead{Fødselsår (19XX)}
+
+  \writtendigits{yob_text}{4}
+  \twodigits{yob}{}
+	% \qbegin{yobc} {Option} {Fødselsår}
+	% \mysetcheckboxtype{singlechoice}
+  % 	\begin{multicols}{2}
+  %
+  %         \begin{sdapsarray}[colsep=2pt]
+  %
+  %            19 & 0 & 1& 2& 3& 4& 5& 6& 7& 8& 9 \\
+  %           & \myanswer{digit_1} \mycheckbox{}{0} & \myanswer{digit_1} \mycheckbox{}{1} & \myanswer{digit_1} \mycheckbox{}{2}
+  %            & \myanswer{digit_1} \mycheckbox{}{3}
+  %            & \myanswer{digit_1} \mycheckbox{}{4}
+  %            & \myanswer{digit_1} \mycheckbox{}{5}
+  %            & \myanswer{digit_1} \mycheckbox{}{6}
+  %            & \myanswer{digit_1} \mycheckbox{}{7}
+  %            & \myanswer{digit_1} \mycheckbox{}{8}
+  %            & \myanswer{digit_1} \mycheckbox{}{9}
+  %
+  %         \end{sdapsarray}
+  %
+  %         \begin{sdapsarray}[colsep=2pt]
+  %             0 & 1& 2& 3& 4& 5& 6& 7& 8& 9 \\
+  %           & \myanswer{digit_2} \mycheckbox{}{0} & \myanswer{digit_2} \mycheckbox{}{1} & \myanswer{digit_2} \mycheckbox{}{2}
+  %            & \myanswer{digit_2} \mycheckbox{}{3}
+  %            & \myanswer{digit_2} \mycheckbox{}{4}
+  %            & \myanswer{digit_2} \mycheckbox{}{5}
+  %            & \myanswer{digit_2} \mycheckbox{}{6}
+  %            & \myanswer{digit_2} \mycheckbox{}{7}
+  %            & \myanswer{digit_2} \mycheckbox{}{8}
+  %            & \myanswer{digit_2} \mycheckbox{}{9}
+  %
+  %         \end{sdapsarray}
+  %     \end{multicols}
+  %   \qend{yobc}
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \begin{choicequestion}[cols=2, var=nation]{Nasjonalitet}
+        \mysetcheckboxtype{singlechoice}
+      \choiceitem{Norsk}
+      \choiceitem{Annen}
+      \choiceitemtext{1cm}{2}{Annen:}
+    \end{choicequestion}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    \textbox*[var=occupation]{1cm}{Yrker, tidligere/nåværende}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \qhead{Antall års utdanning fra og med skolestart}
+
+    \writtendigits{edu_years_text}{2}\\
+    \begin{choicegroup}[colsep=2pt,singlechoice, noalign,  var=edu_years]{}
+				\choice{1}
+			  \choice{2}
+			  \choice{3}
+			  \choice{4}
+			  \choice{5}
+			  \choice{6}
+			  \choice{7}
+			  \choice{8}
+			  \choice{9}
+			  \choice{10}
+			  \choice{11}
+			  \choice{12}
+			  \choice{13}
+			  \choice{14}
+			  \choice{15}
+			  \choice{16}
+			  \choice{17}
+				\choice{18}
+			  \choice{19}
+			  \choice{20}
+			  \choice{21}
+			  \choice{22}
+			  \choice{23}
+			  \choice{24}
+			  \choice{25}
+			  \choice{26}
+			  \choice{27}
+			  \choice{28}
+			  \choice{29}
+			  \choice{30}
+
+			  \question{}
+			\end{choicegroup}
+		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		\begin{choicequestion}[cols=1, var=edu_level, singlechoice]{Sett kryss for høyeste fullførte utdannelsesnivå}
+			\choiceitem[val=0]{Folkeskole (tilsvarer 7-8 år i kognitive normer)}
+			\choiceitem[val=1]{Framhaldsskole/realskole/ungdomsskole (9-11 år)}
+			\choiceitem[val=2]{Videregående skole/fagbrev (12 år)}
+			\choiceitem[val=3]{Høyskole/Bachelor (13-15 år)}
+			\choiceitem[val=4]{Master eller ekvivalent (16-17 år)}
+			\choiceitem[val=5]{Embetsstudier/dr.grad (18-20 år)}
+		\end{choicequestion}
+		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\begin{choicequestion}[cols=2, var=marital, singlechoice]{Ekteskapsstatus:}
+		\choiceitem[val=1]{Samboer/gift}
+		\choiceitem[val=2]{Skilt}
+		\choiceitem[val=3]{Enke(-mann)}
+		\choiceitem[val=0]{Ugift}
+	\end{choicequestion}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \qhead{Ant. barn}
+
+  \writtendigits{children_text}{2}\\
+	\begin{choicequestion}[cols=2, colsep=2pt,singlechoice,  var=children]{}
+		\choiceitem[val=0]{0}
+		\choiceitem[val=1]{1}
+	  \choiceitem[val=2]{2}
+	  \choiceitem[val=3]{3}
+    \choiceitem[val=4]{4}
+    \choiceitem[val=5]{5}
+    \choiceitem[val=6]{> 5}
+		%\question{}
+	\end{choicequestion}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\begin{choicequestion}[cols=1, var=cohab, singlechoice]{Sivilstatus: Bor med samboer/ektefelle?}
+		\choiceitem[val=0]{Bor med en samboer/ektefelle}
+		\choiceitem[val=1]{Bor alene}
+		\choiceitem[val=2]{Bor med noen andre enn en samboer/ektefelle}
+	\end{choicequestion}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \yesno{living_with_children}{Bor personen med mindreårige barn?}
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\begin{optionquestion}[cols=3, var=dwelling]{Bosituasjon}
+				\choiceitem[val=0]{Egen bolig}
+				\choiceitem[val=1]{Omsorgsleilighet}
+				\choiceitem[val=2]{Sykehjem}
+			\end{optionquestion}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\begin{optionquestion}[cols=4, var=assistance]{Kommunale tiltak}
+		\choiceitem[val=0]{Ingen}
+		\choiceitem[val=1]{Hjemmesykepleie}
+		\choiceitem[val=2]{Psykiatrisk sykepleie}
+		\choiceitem[val=3]{Hjemmehjelp}
+		\choiceitem[val=4]{dagtilbud}
+	\end{optionquestion}
+  Kommentarer \newline
+	\inlinefilltextbox{1.5cm}{assistance_comment}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\begin{optionquestion}[cols=1, var=driving]{Kjører deltaker bil?}
+		\choiceitem[val=1]{Ja}
+		\choiceitem[val=0]{Nei}
+	\end{optionquestion}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\begin{optionquestion}[cols=1, var=work]{Yrkesaktiv?}
+		\choiceitem[val=1]{Ja}
+		\choiceitem[val=0]{Nei}
+	\end{optionquestion}
+	Kommentarer (f.eks- prosent ufør, yrkesaktiv \& c)\newline
+	\inlinefilltextbox{1.5cm}{work_comment}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %	    FAMILIEANAMNESE                        %
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %\newpage
+    \large{\textbf{Familieanamnese}}
+
+    \begin{optiongroup}[var=family_cognitive]{Kognitive symptomer/demens}
+		\choice[var=none, val=0]{Ingen}
+      \choice[var=before_65, val=1]{Før 65 år}
+		\choice[var=after_65, val=2]{Etter 65 år}
+    \question[var=mother]{Mor}
+		\question[var=father]{Far}
+		\question[var=sibling]{Søsken}
+		\question[var=other]{Andre}
+		
+	\end{optiongroup}
+
+	\begin{optiongroup}[var=family_vascular]{Vaskulær sykdom}
+		\choice[var=none, val=0]{Ingen}
+    \choice[var=before_65, val=1]{Før 65 år}
+		\choice[var=after_65, val=2]{Etter 65 år}
+    \question[var=mother]{Mor}
+		\question[var=father]{Far}
+		\question[var=sibling]{Søsken}
+		\question[var=other]{Andre}
+		
+	\end{optiongroup}
+
+  %%%%%%
+  % PD extension fof 5.0.0
+  %%%%
+  \color{red}
+  \begin{optiongroup}[var=family_pd]{Parkinson's sykdom}
+		\choice[var=none, val=0]{Ingen}
+    \choice[var=before_65, val=1]{Før 45 år}
+		\choice[var=after_65, val=2]{Etter 45 år}
+    \question[var=mother]{Mor}
+		\question[var=father]{Far}
+		\question[var=sibling]{Søsken}
+		\question[var=other]{Andre}
+		
+	\end{optiongroup}
+
+  \begin{choicegroup}[colsep=2pt,singlechoice, noalign,  var=family_pd_affected]{Antall affiserte i familien}
+    \choice[val=0]{0}
+    \choice[val=1]{1}
+    \choice[val=2]{2}
+    \choice[val=3]{3}
+    \choice[val=4]{4}
+    \choice[val=5]{5}
+    \choice[val=6]{6}
+    \choice[val=7]{7}
+    \choice[val=8]{8}
+    \choice[val=9]{9}
+    \choice[val=10]{10}
+    \question{}
+  \end{choicegroup}
+
+  \begin{optiongroup}[var=family_tremor]{Tremor}
+		\choice[var=none, val=0]{Ingen}
+    \choice[var=before_65, val=1]{Før 45 år}
+		\choice[var=after_65, val=2]{Etter 45 år}
+    \question[var=mother]{Mor}
+		\question[var=father]{Far}
+		\question[var=sibling]{Søsken}
+		\question[var=other]{Andre}
+	\end{optiongroup}
+  \color{black}
+  \newpage
+
+  \color{red}
+  \begin{choicegroup}[colsep=2pt,singlechoice, noalign,  var=family_tremor_affected]{Antall affiserte i familien}
+    \choice[val=0]{0}
+    \choice[val=1]{1}
+    \choice[val=2]{2}
+    \choice[val=3]{3}
+    \choice[val=4]{4}
+    \choice[val=5]{5}
+    \choice[val=6]{6}
+    \choice[val=7]{7}
+    \choice[val=8]{8}
+    \choice[val=9]{9}
+    \choice[val=10]{10}
+    \question{}
+  \end{choicegroup}
+  \color{black}
+
+	\begin{optiongroup}[var=family_other]{Annen relevant sykdom}
+		\choice[var=none, val=0]{Ingen}
+    \choice[var=before_65, val=1]{Før 65 år}
+		\choice[var=after_65, val=2]{Etter 65 år}
+    \question[var=mother]{Mor}
+		\question[var=father]{Far}
+		\question[var=sibling]{Søsken}
+		\question[var=other]{Andre}
+		
+	\end{optiongroup}
+
+    \textbox[var=fh_com]{1cm}{Utdypende opplysninger, nøyaktig diagnose, andre slektninger med demenssykdom}
+
+    \newpage
+    \section{BASELINE SYKEHISTORIE FRA  PASIENT}
+
+    \begin{optionquestion}{Verken kognitive eller fysiske symptomer (gjelder kontrollpersoner uten symptomer), gå til seksjon 5}
+        \choiceitem[val=1]{}
+    \end{optionquestion}
+
+    \begin{optiongroup}[var=P]{}
+      \choice[val=1]{Ja}
+      \choice[val=0]{Nei}
+      \choice[val=-999]{n/a}
+      \question[var=subcogdec]{Selvopplevd reduksjon i kognitiv funksjon?}
+      \question[var=concern]{Dersom ja, bekymrer dette personen?}
+      \question[var=worse_than_others]{Opplevelse av at egen kognitiv funksjon er dårligere enn jevnaldrende?}
+      \question[var=impair]{Opplevelse av funksjonssvikt på grunn av kognitiv reduksjon?}
+      \question[var=helpseeking]{For annonsedeltakere: Har deltaker oppsøkt lege på grunn av kognitiv reduksjon?}
+
+      % DDI plus
+        \question[var=psy_symptom]{Opplevelse av psykiske symptomer}
+      \end{optiongroup}
+    %
+    %
+
+    \textbf{Initiale og tilkomne symptomer}
+
+%
+    \begin{choicequestion}[cols=2, var=P_1symp]{Hvilket symptom merket pasienten først endring i:}
+        \ExplSyntaxOn
+        \sdaps_checkbox_set_type:n {singlechoice}
+        \ExplSyntaxOff
+      \choiceitem[val=0]{Hukommelse}
+      \choiceitem[val=1]{Språk}
+      \choiceitem[val=2]{Desorientering}
+      \choiceitem[val=3]{Motorikk}
+      \choiceitem[val=4]{Eksekutive  problemer}
+      \choiceitem[val=5]{Stemningsleie/depresjon}
+      \choiceitem[val=6]{Endring av personlighet}
+      % new from DDI Plus
+      \choiceitem[val=8]{Psykotiske symptomer (hallusinasjoner, vrangforestilling)}
+      \choiceitem[val=9]{Affektive symptomer (depresjon, angst, apati, indre uro, irritabilitet, eufori)}
+      \choiceitem[val=10]{Vegetative symptomer (søvn, appetitt)}
+      \choiceitem[val=11]{Psykomotoriske symptomer (vandring, uro)}
+      % new from PD
+      \color{red}
+      \choiceitem[val=12]{Skjelving}
+      \choiceitem[val=13]{Langsomhet}
+      \choiceitem[val=14]{Stivhet}
+      \choiceitem[val=15]{Ustøhet}
+      \choiceitem[val=16]{Redusert luktesans}
+      \choiceitem[val=17]{Urolig søvn}
+      \choiceitem[val=18]{Falltendens}
+      \color{black}
+
+      %\choiceitem[val=7]{Annet}
+      \choiceitemtext[var=other]{1cm}{2}{Annet:}
+    \end{choicequestion}
+
+    %% PD side of symptoms
+    \color{red}
+    \begin{optionquestion}[cols=1, var=P_1symp_side]{Hvilken side av kroppen merket du første symptomene}
+      \choiceitem[val=0]{Høyre}
+      \choiceitem[val=1]{Venstre}
+      \choiceitem[val=2]{Begge}
+    \end{optionquestion}
+
+    % \textbox*[var=pd_year_symptom_diagnosis]{1cm}{Alder for diagnosen}
+    \threedigits{pd_year_symptom_diagnosis}{Alder for diagnosen}   
+    \color{black}
+    
+    %% 
+    \begin{tcolorbox}
+      \small
+      Svikt av eksekutive funksjoner kan vise seg som redusert evne til planlegging, igangsetting, konsentrasjon (spesielt mer enn en ting av gangen), å få oversikt over komplekse situasjoner og tilpasse seg uforutsette hendelser.
+      \normalsize
+    \end{tcolorbox}
+%
+    \twodigitstext{P_time1symp}{Alder da første symptom(er) oppsto?}
+%
+    \begin{multicols}{3}
+      \begin{optionquestion}[cols=1, var=P_sudden]{Debut}
+        \choiceitem[val=1]{Akutt}
+        \choiceitem[val=0]{Gradvis}
+      \end{optionquestion}
+
+      \begin{optionquestion}[cols=1, var=P_develop]{Utvikling siden starten}
+        \choiceitem[val=0]{Forverring}
+        \choiceitem[val=2]{Bedring}
+        \choiceitem[val=1]{Uendret}
+      \end{optionquestion}
+
+      \begin{optionquestion}[cols=1, var=P_stepwise_deterio]{Hvis forverring, har dette skjedd}
+        \choiceitem[val=0]{Gradvis}
+        \choiceitem[val=1]{Trinnvis}
+      \end{optionquestion}
+
+    \end{multicols}
+
+
+    \begin{optiongroup}{Nåværende symptomer}
+      \choice[val=1]{Ja}
+        \choice[val=0]{Nei}
+
+      \question[var=P_memo]{Svikt i \textbf{korttidshukommelsen}?}
+     \question[var=P_langu]{Problemer med \textbf{språk/tale?} (ekspressive eller impressiv afasi)}
+     \question[var=P_geog]{Problemer med \textbf{geografisk orientering}?}
+     \question[var=P_timeori]{Problemer med \textbf{tidsorientering}?}
+     \question[var=P_personality]{Personlighets-/atferdsendringer}
+    \end{optiongroup}
+
+    \begin{optiongroup}{Svikt i ADL}
+      \choice[val=1]{Ja}
+      \choice[val=0]{Nei}
+      \question[var=P_IADL]{(eks: mobil, vaskemaskin, kaffetrakter, fjernkontroll, pc, håndarbeid, matlaging, økonomi, handling av husholdningsartikler)}
+      \question[var=P_worktech]{Om pasienten er i arbeid - Problemer med omstilling, nye oppgaver/ny teknologi? (Har noen kommentert/klaget?)}
+    \end{optiongroup}
+
+
+    \begin{optiongroup}{Fysiske symptomer}
+      \choice[val=1]{Ja}
+      \choice[val=0]{Nei}
+      \question[var=P_TIA_symp]{Forbigående pareser, afasi, dysartri}
+      \question[var=P_park_symp]{Parkinsonisme}
+      \question[var=P_balance]{Falltendens}
+      \question[var=P_pain]{Kronisk smerte, definert som mer enn 50\% av tiden, mer enn 15 dager i måneden de siste 3 månedene.}
+      \question[var=P_pd_fluctuations]{\textcolor{red}{Har du merket fluktuasjoner?}}
+      \question[var=P_pd_involuntary_movements]{\textcolor{red}{Har du merket ufrivillige bevegelser?}}
+      \question[var=P_other]{Annet (kommenter nedenfor)}
+    \end{optiongroup}
+
+    \begin{optiongroup}{Hvis ja på falltendens:}
+      \choice[val=1]{Ja}
+      \choice[val=0]{Nei}
+      \question[var=P_fallen_3_month]{Siste 3 mnd.}
+      \question[var=P_fallen_year]{Siste år.}
+    \end{optiongroup}
+
+    \color{red}
+    \begin{choicegroup}[colsep=2pt,singlechoice, noalign]{Hvor lenge har du hatt ufrivillige bevegelser?}
+      \choice[val=0]{0}
+      \choice[val=1]{1}
+      \choice[val=2]{2}
+      \choice[val=3]{3}
+      \choice[val=4]{4}
+      \choice[val=5]{5}
+      \choice[val=6]{6}
+      \choice[val=7]{7}
+      \choice[val=8]{8}
+      \choice[val=9]{9}
+      \choice[val=10]{10}
+      \choice[val=11]{11}
+      \choice[val=12]{12}
+      \choice[val=13]{13}
+      \choice[val=14]{14}
+      \choice[val=15]{15}
+      \choice[val=16]{16}
+      \choice[val=17]{17}
+      \choice[val=18]{18}
+      \choice[val=19]{19}
+      \choice[val=20]{20}
+      \choice[val=21]{21}
+      \choice[val=22]{22}
+      \choice[val=23]{23}
+      \choice[val=24]{24}
+      \choice[val=25]{25}
+      \choice[val=26]{26}
+      \choice[val=27]{27}
+      \choice[val=28]{28}
+      \choice[val=29]{29}
+      \choice[val=30]{30}
+      
+      \question[var=P_pd_involuntary_movements_time]{}
+    \end{choicegroup}
+    \color{black}
+
+
+    \begin{tcolorbox}
+      \small
+       Pareser betyr ufullstendige lammelser.\\
+       Afasi betyr svikt i evnen til å bruke og forstå ord.\\
+       Dysartri betyr svikt i evne til å uttale ord.\\
+       Parkinsonisme betyr hviletremor, stivhet muskulatur, smerter, langsomme bevegelser, tannhjulsbevegelser, endret kroppsholdning.
+       \normalsize
+    \end{tcolorbox}
+
+
+    \begin{optiongroup}{Søvn}
+      \choice[val=1]{Ja}
+      \choice[val=0]{Nei}
+      \question[var=P_vivid_dreams_initial]{Har du ofte drømmer med spesielt livaktig innhold?}
+      \question[var=P_rbd_initial]{Lever du ut disse drømmene med å snakke eller bevege deg?}
+    \end{optiongroup}
+
+
+
+    \begin{optiongroup}{Psykiske symptomer}
+      \choice[val=1]{Ja}
+      \choice[val=0]{Nei}      
+      \question[var=P_anxie]{\textcolor{red}{Angst}}
+      \question[var=P_dep]{Depressivitet}
+      \question[var=P_hallu]{Hallusinasjoner}
+    \end{optiongroup}
+
+
+
+
+
+   \begin{choicequestion}[multichoice]{Dersom hallusinasjoner, spesifisér}
+       \choiceitem[var=P_hallu_auditory]{Hørselshallusinasjoner}
+       \choiceitem[var=P_hallu_visual]{Synshallusinasjoner}
+       \choiceitem[var=P_hallu_tactile]{Berøringshallusinasjoner}
+       \choiceitem[var=P_hallu_olfatory]{Lukthallusinasjoner}
+       \choiceitem[var=P_hallu_gustatory]{Smakshallusinasjoner}
+   \end{choicequestion}
+
+
+   \textbox[var=P_symp_comment]{1.25cm}{Kommentarer}
+
+   %\newpage
+    \section{TIDLIGERE SYKDOMMER}
+
+    \begin{multicols}{2}
+      \begin{choicequestion}[cols=1, multichoice]{Sykdommer i CNS}
+
+        \choiceitem[var=stroke_isch]{Hjerneinfarkt}
+        \choiceitem[var=stroke_hem]{Hjerneblødning}
+        \choiceitem[var=tia]{TIA-anfall}
+        \choiceitem[var=epi]{Epilepsi/bevissthetstap}
+        \choiceitem[var=pd]{Parkinsons sykdom}
+        \choiceitem[var=headtrauma]{Hodetraumer med bevissthetstap}
+        \choiceitem[var=cns_infec]{Infeksjoner (encefalitt, meningitt)}
+      \end{choicequestion}
+
+      \begin{choicequestion}[cols=1, multichoice]{Hjerte-karsykdom}
+
+        \choiceitem[var=coronary]{Koronar hjertesykdom}
+        \choiceitem[var=afib]{Atrieflimmer}
+        \choiceitem[var=heartfail]{Hjertesvikt}
+        \choiceitem[var=heartsurg]{Gjennomgått åpen hjertekirurgi}
+        \choiceitem[var=ht]{Hypertensjon}
+        \choiceitem[var=claudi]{Claudicatio intermittens}
+      \end{choicequestion}
+    \end{multicols}
+
+    \begin{multicols}{2}
+      \begin{choicequestion}[cols=1, multichoice]{Metabolske sykdommer}
+
+        \choiceitem[var=dm]{Diabetes mellitus}
+        \choiceitem[var=thyroid]{Stoffskifteforstyrrelse}
+        \choiceitem[var=vitdef]{Vitaminmangeltilstand (B12, folat, D)}
+        \choiceitem[var=hyperchol]{Hyperkolesterolemi}
+      \end{choicequestion}
+
+      \begin{choicequestion}[cols=1, multichoice]{Betydelig sansesvekkelse}
+        \choiceitem[var=imp_smell]{Luktesans (kaffe og kamfer)}
+        \choiceitem[var=imp_visu]{Syn}
+        \choiceitem[var=imp_hear]{Hørsel}
+      \end{choicequestion}
+    \end{multicols}
+
+
+    \begin{multicols}{2}
+      \begin{choicequestion}[cols=1, multichoice]{Behandlingstrengende psykiatrisk lidelse}
+
+        \choiceitem[var=depres]{Depresjon}
+        \choiceitem[var=bipolar]{Bipolar lidelse}
+        \choiceitem[var=anxie]{Angst}
+        \choiceitem[var=psychosis]{Psykose}
+        \choiceitem[var=delir]{Tilfeller av forvirring/delirium?}
+      \end{choicequestion}
+
+      \begin{choicequestion}[cols=1, multichoice]{Andre tilstander av betydning for det aktuelle}
+
+        \choiceitem[var=solvent]{Langvarig, daglig løsemiddeleksponering}
+        \choiceitem[var=copd]{Alvorlig kronisk lungesykdom}
+        \choiceitem[var=autoimm]{Immunologisk systemsykdom}
+        \choiceitem[var=malign]{Malignitet (paraneoplasi?)}
+        % \question[var=other_previous]{  Annet?}
+      \end{choicequestion}
+    \end{multicols}
+    Annet\\[0.3em]
+    \inlinefilltextbox{2cm}{other_previous_comment}
+    \\[0.2em]
+
+    \newpage
+    \section{AKTUELL MEDIKASJON}
+    \qbegin{meds} {Choice} {Medication}
+  \begin{sdapsarray}[colsep=2pt]
+      Ingen aktuell medikasjon  & \myanswer{no_meds} \mycheckbox{}{} \\\\
+      Platehemmer  & \myanswer{platehemmer} \mycheckbox{}{} \\\\
+      \hrule
+      \Large{Antikoagulantia} & \\
+      Marevan/warfarin  & \myanswer{marevan_warfarin} \mycheckbox{}{}\\
+
+        DOAK (Eliquis, Lixiana, Pradaxa, Xarelto)  & \myanswer{noak} \mycheckbox{}{}\\
+        \hrule
+        Statin og annen lipidsenkende behandling  & \myanswer{statin} \mycheckbox{}{}\\
+
+        Medikamentell behandling for høyt blodtrykk  & \myanswer{blood_pressure} \mycheckbox{}{}\\
+
+        Acetylkolinesterasehemmere  & \myanswer{acetyl} \mycheckbox{}{}\\
+
+        NMDA-reseptorantagonist/memantin  & \myanswer{nmda} \mycheckbox{}{}\\
+        \hrule
+        \Large{B-prep} & \\
+        Benzodiazepiner og -derivater  & \myanswer{benzodiazepine} \mycheckbox{}{}\\
+        Innsovningsmedisin  & \myanswer{sleep} \mycheckbox{}{}\\
+        Kodein, Nobligan, andre opiater  & \myanswer{opiates} \mycheckbox{}{}\\
+        \hrule
+        % Under Kodein, Nobligan, andre opiater, I would add the group 'Andre smertestillende' (other painkillers)
+
+        Antiepileptisk medikasjon  & \myanswer{antiepileptic} \mycheckbox{}{}\\
+        Antidepressiva  & \myanswer{antidepressant} \mycheckbox{}{}\\
+        Typiske nevroleptika  & \myanswer{neuroleptics_typical} \mycheckbox{}{}\\
+        Atypiske nevroleptika  & \myanswer{neuroleptics_atypical} \mycheckbox{}{}\\
+
+        \hrule
+        \Large{Antidiabetika} & \\
+        Insulin  & \myanswer{insulin} \mycheckbox{}{}\\
+        Andre antidiabetika  & \myanswer{other_antidiabetics} \mycheckbox{}{}\\
+
+        \hrule
+        Paracetamol/NSAIDs  & \myanswer{pain_killers} \mycheckbox{}{}\\
+        Kosttilskudd  & \myanswer{suplements} \mycheckbox{}{}\\
+
+        \hrule
+        \color{red}
+        \Large{Antiparkinson medisiner} & \\
+        Levodopa   & \myanswer{levodopa} \mycheckbox{}{}\\
+        Agonister & \myanswer{pd_agonists} \mycheckbox{}{}\\
+        MAO-B hemmer & \myanswer{mao_b_inhibitor} \mycheckbox{}{}\\
+        COMT hemmer & \myanswer{comt_inhibitor} \mycheckbox{}{}\\
+        DBS hjernestimulering & \myanswer{dbs} \mycheckbox{}{}\\
+        Duodopa pumpe & \myanswer{duodopa_pump} \mycheckbox{}{}\\
+        Lecigon pumpe & \myanswer{lecigon_pump} \mycheckbox{}{}\\
+        Apomorfin injeksjoner & \myanswer{apomorfin_injection} \mycheckbox{}{}\\
+        Apomorfin pumpe & \myanswer{apomorfin_pump} \mycheckbox{}{}\\
+        \color{black}
+        \hrule
+      \end{sdapsarray}
+        \qend{meds}
+    
+        
+        \color{red}
+        \begin{multicols}{2}
+            \yesno{pd_meds_improvement}{Har du opplevd god effekt av medisiner?}
+            \yesno{pd_meds_reaction}{Har du merket impulsivitets bivirkninger?}
+        \end{multicols}
+        \color{black}
+        \newpage
+        \color{red}
+    
+            % \textbox*[var=levodopa_dose]{1cm}{Levodopa ekvivalente døgndoser}
+            \threedigits{levodopa_dose}{Levodopa ekvivalente døgndoser}
+            % \textbox*[var=dbs_year]{1cm}{DBS årstall}
+            \yearcommand{dbs_year}{DBS årstall}
+    
+        % \textbox*[var=duodopa_year]{1cm}{Duodopa pumpe årstall}
+        \yearcommand{duodopa_year}{Duodopa pumpe årstall}
+        % \textbox*[var=lecigon_year]{1cm}{Lecigon pumpe årstall}
+        \yearcommand{lecigon_year}{Lecigon pumpe årstall}
+        % \textbox*[var=apomorfin_year]{1cm}{Apomorfin pumpe årstall}
+        \yearcommand{apomorfin_year}{Apomorfin pumpe årstall}
+        \color{black}
+        \textbox[var=med_comment]{3cm}{Full liste over medisiner, kommentarer}
+
+
+  \newpage
+  \section{STIMULANTIA}
+  \begin{optionquestion}[cols=1, var=Smok]{Røyking?}
+    \choiceitem[val=0]{Aldri røkt}
+    \choiceitem[val=1]{Nåværende røyker}
+    \choiceitem[val=2]{Tidligere røyker}
+  \end{optionquestion}
+
+  \textbox*[var=smok_comment]{1.5cm}{Evt kommentar. Dersom tidligere røyker: når sluttet personen å røyke.}
+
+  \twodigitstext{Alco_unitpweek}{Gjennomsnittlig antall alkoholenheter per uke}
+  \begin{tcolorbox}
+    \small
+    Eksempler på 1 alkoholenhet er:\\
+    En flaske (33 cl) pils på 4,5 vol \%\\
+    Et lite glass vin (12,5 cl) på 12 vol \%\\
+    Et enda mindre glass sterkvin (7,5 cl) 20 vol \%\\
+    Et svært lite glass brennevin (4 cl) 40 vol \%
+    \normalsize
+  \end{tcolorbox}
+
+  \yesno{stimulants_overuse}{Overforbruk av alkohol, medisiner, andre rusmidler. Utfør FAST spørreskjema dersom mer enn 6 enheter for kvinner og 8 enheter for menn}
+  \textbox[var=stimulants_overuse_comment]{1cm}{Evt kommentar}
+
+
+  % Commands to generate the checkbox rows in the FAST table
+  \ExplSyntaxOn
+  \newcommand{\fastrow}[2]{
+    \sdaps_qobject_begin:nnn {  } { Option } { #2}
+
+      \sdaps_qobject_append_var:n {#2}
+      \sdaps_checkbox_set_type:n {singlechoice}
+      #1 &
+
+      \sdaps_answer:n {#2} \sdaps_checkbox:nn {} {0} &
+      \sdaps_answer:n {#2} \sdaps_checkbox:nn {} {1} &
+      \sdaps_answer:n {#2} \sdaps_checkbox:nn {} {2} &
+      \sdaps_answer:n {#2} \sdaps_checkbox:nn {} {3} &
+      \sdaps_answer:n {#2} \sdaps_checkbox:nn {} {4} \\
+              \hline
+    \sdaps_qobject_end:n {  }
+  }
+
+  \newcommand{\fastrowlast}[1]{
+    \sdaps_qobject_begin:nnn { } { Option } { fast4}
+      \sdaps_qobject_append_var:n {fast4}
+      \sdaps_checkbox_set_type:n {singlechoice}
+      #1 &
+      \sdaps_answer:n { fast4}
+      \sdaps_checkbox:nn {} {0}  &
+      \multicolumn{2}{c|}{ \sdaps_answer:n {fast4} \sdaps_checkbox:nn {} {1}  } &
+      \multicolumn{2}{c|}{ \sdaps_answer:n {fast4} \sdaps_checkbox:nn {} {2}  }
+      \sdaps_qobject_end:n { }
+      \\
+      \hline
+
+  }
+  \ExplSyntaxOff
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \small
+  \begin{tabular} {|m{6cm}| m{2cm}| m{2.5cm} |m{1.5cm}| m{1.5cm}| m{2.5cm}| }
+     \hline
+    \textbf{FAST - Alkohol screening test} & \multicolumn{5}{l|}{Sett ring rundt svaret. Spm 2-4 tas kun dersom 1-2 poeng på spm 1} \\
+    \hline
+     &
+    Aldri&
+    Sjeldnere enn månedlig &
+    Månedlig &
+    Ukentlig &
+    Daglig eller nesten daglig \\
+
+     &
+    (0) &
+    (1) &
+    (2) &
+    (3) &
+    (4) \\
+    \hline
+    \fastrow{1. Hvor ofte drikker du 8 (for menn)/6 (for kvinner) alkoholenheter eller mer ved samme anledning?}{fast1}
+    \fastrow{2. Hvor ofte i løpet av siste året har det vært umulig å huske hva som hendte kvelden før p.g.a. drikking?}{fast2}
+    \fastrow{3. Hvor ofte i løpet av siste året har du ikke klart å gjøre det som var normalt forventet av deg, pga. drikking?}{fast3}
+
+     &
+    Nei &
+    \multicolumn{2}{c|}{Ja én gang}
+     &
+    \multicolumn{2}{c|}{Ja, flere ganger}
+    \\
+
+    &
+    (0) &
+   \multicolumn{2}{c|}{(2)}
+    &
+   \multicolumn{2}{c|}{(4)}
+   \\
+    \hline
+    \fastrowlast{4. Siste året har en slektning/venn/helsearbeider bekymret seg over drikkingen din eller antydet at du bør redusere?}
+
+  \end{tabular}
+  \normalsize
+  \newpage
+
+
+
+  \section{NATURLIGE FUNKSJONER}
+  \begin{choicequestion}[cols=1, multichoice]{}
+    \choiceitem[var=urin_symp]{Symptomer ved vannlating?}
+    \choiceitem[var=bowel_symp]{Symptomer ved avføring?}
+    \choiceitem[var=weightloss]{Vekttap?}
+    \choiceitem[var=sex_symp]{Endring av seksuell funksjon?}
+    \choiceitem[var=sleep_symp1]{Søvnproblemer eller tretthet på dagtid? (Hvis ja, fortsett med spørsmålene under)}
+    \choiceitem[var=sleep_symp2]{Minst 3 ganger per uke og i mer enn 1 måned, hatt problem med å sovne og/el. holde søvnen ved like?}
+    \choiceitem[var=P_rbd]{Drømmer ser ut til å leves ut?}
+    \choiceitem[var=P_rbd_injury]{Skadelig eller potensielt skadelig atferd under søvn?}
+    \choiceitem[var=sleepinterrup]{Søvnatferd avbryter søvnen?}
+    \choiceitem[var=P_restlesslegs_cramps]{Leggkramper/urolige ben?}
+    \choiceitem[var=P_apnea]{Symptomer på obstruktiv søvnapné?}
+  \end{choicequestion}
+  Ev. Kommentar\\[0.5em]
+\inlinefilltextbox{2cm}{symp_comment}
+
+
+\section{GDS}
+
+\begin{tcolorbox}
+\small
+Geriatric Depression Scale fins i versjon med 15 og 30 spørsmål. Spørsmål skrevet med fet skrift tilhører både GDS 15 og GDS 30, mens spørsmål ikke skrevet med fet skrift tilhører kun GDS 30.\\[0.1em]
+Si: «Her kommer 15/30 spørsmål om hvorledes du har følt deg den siste uken. Velg det svaralternativ som passer for deg.»\\[0.1em]
+
+Hvis pasienten skal fylle ut skjemaet selv, gi vedkommende eget skjema for selvutfylling.\\
+Erfaringer tilsier at en med fordel kan hjelpe pasienten med utfyllingen eventuelt fylle ut skjemaet selv ved å intervjue pasienten.\\[0.1em]
+
+Ref:\\
+Yesavage \& Brinx, 1983; Sheikh \& Yesavage, 1986; Burke WJ et al., 1989 \\[0.1em]
+
+Et JA på spørsmålene 2, 3, 4, 6, 8, 10, 11, 12, 13, 14, 16, 17, 18, 20, 22, 23, 24, 25, 26 og 28 gir en skår på 1, mens et NEI på spørsmålene 1, 5, 7, 9, 15, 19, 21, 27, 29 og 30 også gir skåre 1.\\
+Svar der «ja» indikerer depresjon, er markert med *.\\[0.1em]
+
+Skåring GDS 15:\\
+En skår på 0-5 er normalt. En skår høyere enn 5, kan indikere depresjon.\\
+Skåring GDS 30:\\
+En skår på > 11 indikerer depresjon; sensitivitet 84 \% og spesifisitet 95 \%. Dersom man øker cut-off skår til > 14, er sensitiviteten 80 \% og spesifisiteten 100 \%.
+\normalsize
+\end{tcolorbox}
+
+\ExplSyntaxOn
+\newcommand{\gdsrow}[3]{
+    \sdaps_qobject_begin:nnn {gds_item} { Option } {#3}
+    \sdaps_qobject_append_var:n {#3}
+        \sdaps_checkbox_set_type:n {singlechoice}
+        #1 & #2 &
+    \sdaps_answer:n {#3} \sdaps_checkbox:nn {} {1}   &
+        \sdaps_answer:n {#3} \sdaps_checkbox:nn {} {0}
+
+    \sdaps_qobject_end:n {gds_item}
+}
+\ExplSyntaxOff
+
+\begin{center}
+    \begin{tabular}{|m{0.5cm}|m{15.9cm}|m{0.8cm}|m{0.8cm}|}
+        \hline
+        \textbf{nr.} & \textbf{SPØRSMÅL} & \textbf{Ja} & \textbf{Nei}
+        \\
+            \hline
+        \gdsrow{1}{\textbf{Føler du deg jevnt over tilfreds med livet}}{gdeps1} %1 in GDS-15
+        \\
+            \hline
+        \gdsrow{2}{\textbf{Har du oppgitt eller sluttet med mange interesser *}}{gdeps2} %2 in GDS-15
+        \\
+            \hline
+        \gdsrow{3}{\textbf{Føler du at livet er tomt *}}{gdeps3} %3 in GDS-15
+        \\
+            \hline
+        \gdsrow{4}{\textbf{Synes du ofte at tilværelsen er kjedelig *}}{gdeps4} %4 in GDS-15
+        \\
+            \hline
+        \gdsrow{5}{Ser du lyst på fremtiden }{gdeps5}
+        \\
+            \hline
+        \gdsrow{6}{Er du plaget med tanker som du ikke får ut av hodet *}{gdeps6}
+        \\
+            \hline
+        \gdsrow{7}{\textbf{Er du vanligvis i godt humør  }}{gdeps7} %5 in GDS-15
+        \\
+            \hline
+        \gdsrow{8}{\textbf{Er du engstelig for at det skal hende deg noe alvorlig  *}}{gdeps8} %6 in GDS-15
+        \\
+            \hline
+        \gdsrow{9}{\textbf{Føler du deg vanligvis lykkelig }}{gdeps9} %7 in GDS-15
+        \\
+            \hline
+        \gdsrow{10}{\textbf{Føler du deg ofte hjelpeløs  *}}{gdeps10} %8 in GDS-15
+        \\
+            \hline
+        \gdsrow{11}{Føler du deg ofte urolig og rastløs *}{gdeps11}
+        \\
+            \hline
+        \gdsrow{12}{\textbf{Foretrekker du å være hjemme fremfor å gå ut å oppleve nye ting *}}{gdeps12} %9 in GDS-15
+        \\
+            \hline
+        \gdsrow{13}{Er du bekymret for din egen fremtid  *}{gdeps13}
+        \\
+            \hline
+        \gdsrow{14}{\textbf{Føler du at du har større problem med hukommelsen enn mange andre (jevnaldrende) *}}{gdeps14} %10 in GDS-15
+        \\
+            \hline
+        \gdsrow{15}{\textbf{Føler du i øyeblikket at det er godt å leve }}{gdeps15} %11 in GDS-15
+        \\
+            \hline
+        \gdsrow{16}{Føler du deg ofte nedtrykt og ensom  *}{gdeps16}
+        \\
+            \hline
+        \gdsrow{17}{\textbf{Føler du deg verdiløs slik du nå er *}}{gdeps17} %12 in GDS-15
+        \\
+            \hline
+        \gdsrow{18}{Bekymrer du deg ofte over fortiden  *}{gdeps18}
+        \\
+            \hline
+        \gdsrow{19}{Synes du livet er spennende }{gdeps19}
+        \\
+            \hline
+        \gdsrow{20}{Er det et tiltak å ta fatt på noe nytt *}{gdeps20}
+        \\
+            \hline
+        \gdsrow{21}{\textbf{Føler du deg opplagt }}{gdeps21} %13 in GDS-15
+        \\
+            \hline
+        \gdsrow{22}{\textbf{Synes du at din egen situasjon er håpløs *}}{gdeps22} %14 in GDS-15
+        \\
+            \hline
+        \gdsrow{23}{\textbf{Synes du at folk flest har det bedre enn deg *}}{gdeps23} %15 in GDS-15
+        \\
+            \hline
+        \gdsrow{24}{Blir du ofte forstyrret av bagateller *}{gdeps24}
+        \\
+            \hline
+        \gdsrow{25}{Føler du ofte trang til å gråte *}{gdeps25}
+        \\
+            \hline
+        \gdsrow{26}{Har du vansker med konsentrasjonen *}{gdeps26}
+        \\
+            \hline
+        \gdsrow{27}{Liker du å stå opp om morgenen }{gdeps27}
+        \\
+            \hline
+        \gdsrow{28}{Forsøker du å unngå sosiale sammenkomster *}{gdeps28}
+        \\
+            \hline
+        \gdsrow{29}{Faller det deg lett å ta bestemmelser }{gdeps29}
+        \\
+            \hline
+        \gdsrow{30}{Er du like lys til sinns som tidligere }{gdeps30}
+        \\
+        \hline
+
+    \end{tabular}
+\end{center}
+
+\qhead{GDS 15 total score}
+\writtendigits{gdeps_tot_text}{2}
+\begin{choicegroup}[colsep=2pt,singlechoice, noalign]{}
+  \choice[val=0]{0}
+  \choice[val=1]{1}
+  \choice[val=2]{2}
+  \choice[val=3]{3}
+  \choice[val=4]{4}
+  \choice[val=5]{5}
+  \choice[val=6]{6}
+  \choice[val=7]{7}
+  \choice[val=8]{8}
+  \choice[val=9]{9}
+  \choice[val=10]{10}
+  \choice[val=11]{11}
+  \choice[val=12]{12}
+  \choice[val=13]{13}
+  \choice[val=14]{14}
+  \choice[val=15]{15}
+  \question[var=gdeps_tot_15]{}
+\end{choicegroup}
+
+\qhead{GDS 30 total score}
+\writtendigits{gdeps_tot_30_text}{2}
+\begin{choicegroup}[colsep=2pt,singlechoice, noalign]{}
+  \choice[val=0]{0}
+  \choice[val=1]{1}
+  \choice[val=2]{2}
+  \choice[val=3]{3}
+  \choice[val=4]{4}
+  \choice[val=5]{5}
+  \choice[val=6]{6}
+  \choice[val=7]{7}
+  \choice[val=8]{8}
+  \choice[val=9]{9}
+  \choice[val=10]{10}
+  \choice[val=11]{11}
+  \choice[val=12]{12}
+  \choice[val=13]{13}
+  \choice[val=14]{14}
+  \choice[val=15]{15}
+  \choice[val=16]{16}
+  \choice[val=17]{17}
+  \choice[val=18]{18}
+  \choice[val=19]{19}
+  \choice[val=20]{20}
+  \choice[val=21]{21}
+  \choice[val=22]{22}
+  \choice[val=23]{23}
+  \choice[val=24]{24}
+  \choice[val=25]{25}
+  \choice[val=26]{26}
+  \choice[val=27]{27}
+  \choice[val=28]{28}
+  \choice[val=29]{29}
+  \choice[val=30]{30}
+  \question[var=gdeps_tot_30]{}
+\end{choicegroup}
+
+\newpage
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+      %	        SOMATISK STATUS               %
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+      \section{SOMATISK STATUS}
+
+      \textbf{Blodtrykk}\\
+
+
+
+      \newcommand{\bpdigits}[2]{
+        \begin{choicegroup}[colsep=2pt,singlechoice, noalign,  var=#1]{#2}
+          \choice[val=0]{0}
+          \choice[val=1]{1}
+          \choice[val=2]{2}
+          \choice[val=3]{3}
+          \choice[val=4]{4}
+          \choice[val=5]{5}
+          \choice[val=6]{6}
+          \choice[val=7]{7}
+          \choice[val=8]{8}
+          \choice[val=9]{9}
+          \question[var=1, range={...,2}]{}
+          \question[var=2]{}
+          \question[var=3]{}
+        \end{choicegroup}
+      }
+
+      \newcommand{\bloodentry}[1]{
+      \color{orange}
+      \qbegin{bloodentry}{Text}{}
+        \begin{multicols}{3}
+          \begin{flushright}
+              \mytextbox{bp_#1_sys_text_1}{3mm}{7mm}{7mm}{0} \mytextbox{bp_#1_sys_text_2}{3mm}{7mm}{7mm}{0} \mytextbox{bp_#1_sys_text_3}{3mm}{7mm}{7mm}{0}
+          \end{flushright}
+          \columnbreak
+
+          \begin{flushright}
+              \mytextbox{bp_#1_dias_text_1}{3mm}{7mm}{7mm}{0} \mytextbox{bp_#1_dias_text_1}{3mm}{7mm}{7mm}{0} \mytextbox{bp_#1_dias_text_1}{3mm}{7mm}{7mm}{0}
+          \end{flushright}
+          \columnbreak
+
+          \begin{flushright}
+              Puls \mytextbox{pulse_#1_text_1}{3mm}{7mm}{7mm}{0} \mytextbox{pulse_#1_text_1}{3mm}{7mm}{7mm}{0} \mytextbox{pulse_#1_text_1}{3mm}{7mm}{7mm}{0}
+          \end{flushright}
+        \end{multicols}
+
+      \qend{bloodentry}
+      \color{black}
+      }
+      % Recumbent BP
+
+  \qhead{Blodtrykk, liggende, etter ett minutt}
+
+      \bloodentry{recum}
+
+      \begin{multicols}{3}
+        \bpdigits{bp_recum_sys}{}
+        \bpdigits{bp_recum_dias}{}
+        \bpdigits{pulse_recum}{}
+      \end{multicols}
+
+      % 1 minute stading
+
+  \qhead{Blodtrykk, stående, umiddelbart etter å ha reist seg}
+    \bloodentry{0m}
+    \begin{multicols}{3}
+      \bpdigits{bp_0m_sys}{}
+      \bpdigits{bp_0m_dias}{}
+      \bpdigits{pulse_0m}{}
+    \end{multicols}
+
+  \qhead{Blodtrykk, stående, etter ett minutt}
+
+      \bloodentry{1m}
+
+
+      \begin{multicols}{3}
+        \bpdigits{bp_1m_sys}{}
+        \bpdigits{bp_1m_dias}{}
+        \bpdigits{pulse_1m}{}
+      \end{multicols}
+
+      % 3 minute stading
+
+  \qhead{Blodtrykk, stående, etter tre minutter}
+
+      \bloodentry{3m}
+
+
+      \begin{multicols}{3}
+        \bpdigits{bp_3m_sys}{}
+        \bpdigits{bp_3m_dias}{}
+       \bpdigits{pulse_3m}{}
+      \end{multicols}
+
+      \yesno{pulse_reg}{Puls; regelmessig}
+      \qbegin{pulse_notes}{Text}{}
+        \color{orange}
+        \mytextbox{pulse_notes}{3mm}{5mm}{50mm}{1}
+        \color{black}
+      \qend{pulse_notes}
+      \\[0.2em]
+
+
+
+      \yesno{ortho_hypotension}{Ortostatisk hypotensjon}
+      \begin{tcolorbox}
+        \footnotesize{I amerikanske retningslinjer defineres ortostatisk hypotensjon som en reduksjon i systolisk blodtrykk på minst 20 mm Hg eller en reduksjon i diastolisk blodtrykk på minst 10 mm Hg innen 3 minutter etter at pasienten har reist seg opp}
+        \normalsize
+      \end{tcolorbox}
+      % new from PD
+      \color{red}
+      \yesno{bradykardi}{Bradykardi}
+      \color{black}
+
+
+  \qhead{Pasientens høyde i cm}
+
+      \writtendigits{height_text}{3}
+      \bpdigits{height}{}
+
+      %\newpage %avoid coloring the frames
+
+  \qhead{Pasientens vekt i kg}
+
+      \writtendigits{weight_text}{3}
+      \bpdigits{weight}{}
+      
+      \color{red}
+  \yesno{weightloss}{Har du hatt vekttap siste året?}
+  \begin{choicegroup}[colsep=2pt,singlechoice, noalign,  var=lost_kg]{Hvor mange kg har du gått ned i vekt?}
+      \choice[val=0]{0}
+      \choice[val=1]{1}
+      \choice[val=2]{2}
+      \choice[val=3]{3}
+      \choice[val=4]{4}
+      \choice[val=5]{5}
+      \choice[val=6]{6}
+      \choice[val=7]{7}
+      \choice[val=8]{8}
+      \choice[val=9]{9}
+      \choice[val=10]{10}
+      \choice[val=11]{11}
+      \choice[val=12]{12}
+      \choice[val=13]{13}
+      \choice[val=14]{14}
+      \choice[val=15]{15}
+      \choice[val=1]{16}
+      \choice[val=2]{17}
+      \choice[val=3]{18}
+      \choice[val=4]{19}
+      \choice[val=5]{20}
+      \choice[val=6]{21}
+      \choice[val=7]{22}
+      \choice[val=8]{23}
+      \choice[val=9]{24}
+      \choice[val=10]{25}
+      \choice[val=11]{26}
+      \choice[val=12]{27}
+      \choice[val=13]{28}
+      \choice[val=14]{29}
+      \choice[val=15]{30}
+      \question{}
+    \end{choicegroup}
+  
+  \color{black}
+
+
+  \qhead{Timed up and go, noter gjennomsnitt av to forsøk}
+
+      Timed up and go, noter gjennomsnitt av to forsøk\\
+      Notater\\[0.5em]
+      \qbegin{tug_notes}{Text}{}
+        \color{orange}
+        \mytextbox{tug_notes}{3mm}{10mm}{50mm}{1}
+        \color{black}
+      \qend{tug_notes}
+      \\[0.5em]
+      \twodigits{timedup}{}
+
+
+    % \captionpagehuge{Denne siden har med vilje ingen tekst}
+    \captionpagehuge{Komparentopplysninger}
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %	 AKTUELL SYKEHISTORIE FRA PÅRØRENDE   %
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    \section{BASELINE SYKEHISTORIE FRA PÅRØRENDE}
+        \yesno{iaiAvailable}{Innhenting av informasjon fra pårørende skal gjøres, ble det gjort?}
+
+        \begin{choicequestion}[var=inf_relation]{Relasjon til deltaker}
+            \ExplSyntaxOn
+          \sdaps_checkbox_set_type:n {singlechoice}
+          \ExplSyntaxOff
+                \choiceitem[val=0]{Ektefelle/samboer}
+                \choiceitem[val=1]{Søsken}
+                \choiceitem[val=2]{Barn}
+                \choiceitem[val=3]{Venn}
+
+                \choiceitemtext[var=inf_relation_other]{1cm}{3}{Annet}
+        \end{choicequestion}
+%
+        \begin{optionquestion}[var=inf_freq]{Kontakthyppighet}
+                \choiceitem[val=0]{Daglig}
+                \choiceitem[val=1]{Flere ganger i uken}
+                \choiceitem[val=2]{Én gang i uken}
+                \choiceitem[val=3]{Sjeldnere enn ukentlig}
+        \end{optionquestion}
+
+        \textbox*[var=inf_com]{4cm}{Evt spesielle momenter fra på rørendesamtale/generell kommentar om evt mental endring}
+        \begin{tcolorbox}
+          \small
+          Kognisjon betyr:\\
+          Håndtering av informasjon, oppmerksomhet og konsentrasjon. Læring og gjenhenting av informasjonen. Tenkning, planlegging og problemløsning.
+          \normalsize
+        \end{tcolorbox}
+
+        \vspace{0.2cm}
+        \begin{choicequestion}[var=I, cols=1, multichoice]{}
+          \choiceitem[var=subcogdec]{Har pårørende registrert kognitive reduksjon hos deltaker?}
+          \choiceitem[var=concern]{Hvis ja, på første spørsmål: Er pårørende bekymret for den kognitive reduksjonen?}
+          \choiceitem[var=impair]{Hvis ja, på første spørsmål: Forhindrer dette deltaker fra å fungere i jobb eller vanlig aktivitet?}
+        \end{choicequestion}
+
+        \begin{choicequestion}[var=I]{Hvis ja, på første spørsmål: Hvilke symptom merket pårørende først: Endring i:}
+            \ExplSyntaxOn
+          \sdaps_checkbox_set_type:n {singlechoice}
+          \ExplSyntaxOff
+                \choiceitem[var=1symp_0, val=0]{Hukommelse}
+                \choiceitem[var=1symp_1, val=1]{Språk}
+                \choiceitem[var=1symp_2, val=2]{Orientering}
+                \choiceitem[var=1symp_3, val=3]{Motorikk}
+                \choiceitem[var=1symp_4, val=4]{Eksekutive symptomer}
+                \choiceitem[var=1symp_5, val=5]{Depresjon}
+                \choiceitem[var=1symp_6, val=6]{Personlighetsendring}
+
+                \choiceitemtext[var=1symp_other]{1cm}{3}{Annet}
+        \end{choicequestion}
+        \begin{tcolorbox}
+          \small
+          Svikt av eksekutive funksjoner kan vise seg som redusert evne til planlegging, igangsetting, konsentrasjon (spesielt mer enn en ting av gangen), å få oversikt over komplekse situasjoner og tilpasse seg uforutsette hendelser.
+          \normalsize
+        \end{tcolorbox}
+
+        \newpage
+      \twodigitstext{I_time1symp}{Antall år siden pårørende ble oppmerksom på initale symptom}
+
+       \begin{multicols}{3}
+        \begin{optionquestion}[cols=1, var=I_sudden]{Debut}
+          \choiceitem[val=1]{Akutt}
+          \choiceitem[val=0]{Gradvis}
+        \end{optionquestion}
+
+        \begin{optionquestion}[cols=1, var=I_develop]{Utvikling siden starten}
+          \choiceitem[val=0]{Forverring}
+          \choiceitem[val=2]{Bedring}
+          \choiceitem[val=1]{Uendret}
+        \end{optionquestion}
+
+        \begin{optionquestion}[cols=1, var=I_stepwise_deterio]{Hvis forverring, har dette skjedd}
+          \choiceitem[val=0]{Gradvis}
+          \choiceitem[val=1]{Trinnvis}
+        \end{optionquestion}
+       \end{multicols}
+
+       \textbf{Nåværende symptomer ifølge pårørende}
+       \begin{optiongroup}[var=I]{}
+         \choice[val=1]{Ja}
+         \choice[val=0]{Nei}
+         \question[var=memo]{Svikt i \textbf{korttidshukommelsen}?}
+        \question[var=langu]{Problemer med \textbf{språk/tale?} (ekspressive eller impressiv afasi)}
+        \question[var=geog]{Problemer med \textbf{geografisk orientering}?}
+        \question[var=timeori]{Problemer med \textbf{tidsorientering}?}
+        \question[var=perso]{Personlighets-/atferdsendringer}
+       \end{optiongroup}
+       \begin{tcolorbox}
+         Personer med begynnende demens kan glemme helt enkle ord, gå i stå midt i en samtale, bruke ord som er meningsløse i sammenhengen og gjenta ord eller utsagn uvanlig mange ganger
+       \end{tcolorbox}
+
+       \begin{optiongroup}[var=I]{Svikt i ADL}
+         \choice[val=1]{Ja}
+         \choice[val=0]{Nei}
+         \question[var=iADL]{(eks: mobil, vaskemaskin, kaffetrakter, fjernkontroll, pc, håndarbeid, matlaging, økonomi, handling av husholdningsartikler)}
+         \question[var=worktech]{Om pasienten er i arbeid - Problemer med omstilling, nye oppgaver/ny teknologi? (Har noen kommentert/klaget?)}
+       \end{optiongroup}
+
+       \begin{optiongroup}{Fysiske symptomer}
+         \choice[val=1]{Ja}
+         \choice[val=0]{Nei}
+         \question[var=I_TIA_symp]{Forbigående pareser, afasi, dysartri}
+         \question[var=I_park_symp]{Parkinsonisme}
+         \question[var=I_balance]{Falltendens}
+         \question[var=I_other]{Annet}
+         %%%!!!!! place the textbox
+       \end{optiongroup}
+       \begin{tcolorbox}
+        \small
+          Pareser betyr ufullstendige lammelser.\\
+          Afasi betyr bruke og forstå ord.\\
+          Dysartri betyr svikt i evne til å uttale ord.\\
+          Parkinsonisme betyr hviletremor, stivhet muskulatur, smerter, langsomme bevegelser, tannhjulsbevegelser, endret kroppsholdning.
+          \normalsize
+       \end{tcolorbox}
+
+       \begin{optiongroup}{Psykiske symptomer}
+         \choice[val=1]{Ja}
+         \choice[val=0]{Nei}
+         \question[var=I_anxie]{Angst}
+         \question[var=I_dep]{Depressivitet}
+         \question[var=I_hallu]{Hallusinasjoner}
+       \end{optiongroup}
+
+      \begin{choicequestion}{Dersom hallusinasjoner, spesifisér}
+          \choiceitem[var=I_hallu_auditory]{Hørselshallusinasjoner}
+          \choiceitem[var=I_hallu_visual]{Synshallusinasjoner}
+          \choiceitem[var=I_hallu_tactile]{Berøringshallusinasjoner}
+          \choiceitem[var=I_hallu_olfatory]{Lukthallusinasjoner}
+          \choiceitem[var=I_hallu_gustatory]{Smakshallusinasjoner}
+      \end{choicequestion}
+
+       \begin{optiongroup}{}
+         \choice[val=1]{Ja}
+         \choice[val=0]{Nei}
+
+         \question[var=I_emo]{\textbf{Emosjonell labilitet}?}
+         \question[var=I_passiv]{\textbf{Passivitet} (sluttet med aktiviteter/hobbyer, apati, likegyldighet)}
+         \question[var=I_behmotor]{\textbf{Atferdsmessige motoriske symptomer}? (Repetitiv, stereotyp atferd eller tale)}
+       \end{optiongroup}
+       \begin{tcolorbox}
+        \small
+          Emosjonell labilitet betyr ukontrollert latter, gråt, omskiftelig, usikker, påvirkelig
+          \normalsize
+       \end{tcolorbox}
+
+        \textbox*[var=I_symp_comment]{1.25cm}{Kommentarer}
+        % \color{black}
+        \ExplSyntaxOn
+        \newcommand{\mayorow}[4]{
+            \sdaps_qobject_begin:nnn {  } { Option } {#2}
+            \sdaps_qobject_append_var:n {#2}
+                \sdaps_checkbox_set_type:n {singlechoice}
+                #1 &
+            \sdaps_answer:n { #2} \sdaps_checkbox:nn {} {1} \hspace{4pt}#3  &
+                \sdaps_answer:n { #2} \sdaps_checkbox:nn {} {0} \hspace{4pt}#4
+
+            \sdaps_qobject_end:n {  }
+        }
+        \ExplSyntaxOff
+
+        \begin{tabular}{|m{8cm}|m{4.5cm}|m{4.5cm}|}
+            \hline
+            \textbf{Mayo Fluktuasjonsskala} \newline \small{(Hvis 3-4 poeng er fluktasjonskriteriet oppfylt)} \normalsize
+            & 1 poeng & 0 poeng
+            \\
+            \hline
+            \mayorow{1. Hender det at pasientens tankeflyt virker desorganisert, uklar eller ulogisk?}{I_mayofluc1}{Ja}{Nei}
+            \\
+            \hline
+            \mayorow{2. Hvor ofte er pasienten døsig eller søvnig i løpet av dagen, selv om han/hun fikk tilstrekkelig med søvn natten før?}{I_mayofluc2}{Hele tiden eller flere ganger om dagen }{En gang daglig eller sjeldnere}
+            \\
+            \hline
+            \mayorow{3. Hvor mye tid sover deltaker i løpet av dagen (før kl 19)?}{I_mayofluc3}{To timer eller mer}{Mindre enn 2 timer}
+            \\
+            \hline
+            \mayorow{4. Stirrer deltaker ut i luften i lange perioder?}{I_mayofluc4}{Ja}{Nei}
+            \\
+            \hline
+        \end{tabular}
+
+        \vspace{1cm}
+
+
+
+        \begin{sdapsarray}[colsep=2pt]
+            & Ja & Nei \\
+            \qbegin{symp} {Option} {I_diet}
+            \mysetcheckboxtype{singlechoice}
+            \appendvar{I_diet}
+            Endring av matvaner  & \myanswer{I_diet} \mycheckbox{}{1} & \myanswer{I_diet} \mycheckbox{}{0}
+            \qend{symp} \\
+            \qbegin{symp} {Option} {I_abuse}
+            \mysetcheckboxtype{singlechoice}
+            \appendvar{I_abuse}
+            \textbf{Overforbruk av alkohol}, medikamenter, andre rusmidler?  & \myanswer{I_abuse} \mycheckbox{}{1} & \myanswer{I_abuse} \mycheckbox{}{0}
+            \qend{symp} \\
+            \hrule
+            \textbf{Utvalgte spørsmål fra Mayo Sleep Questionnaire} & & \\
+            \qbegin{symp} {Option} {I_apnea}
+            \mysetcheckboxtype{singlechoice}
+            \appendvar{I_apnea}
+            Symptomer på obstruktiv søvnapné  & \myanswer{I_apnea} \mycheckbox{}{1} & \myanswer{I_apnea} \mycheckbox{}{0}
+            \qend{symp}\\
+            \qbegin{symp} {Option} {I_rbd}
+            \mysetcheckboxtype{singlechoice}
+            \appendvar{I_rbd}
+            Har du opplevd at pasienten ser ut til å «leve ut sine drømmer» under søvn? Slått, strukket ut armene, ropt eller skreket? & \myanswer{I_rbd} \mycheckbox{}{1} & \myanswer{I_rbd} \mycheckbox{}{0}
+            \qend{symp}\\
+
+      	\end{sdapsarray}
+
+
+        \textbox*[var=I_symp_comment]{3cm}{Kommentarer}
+
+        \newpage
+        \begin{tcolorbox}
+          \small
+            Dersom ja på ovennevnte søvnspørsmål, fortsett.
+            \normalsize
+        \end{tcolorbox}
+
+        \twodigitstext{I_rbd_duration_years}{a. Hvor lenge har dette foregått? (angi i antall år)}
+        \ExplSyntaxOn
+        \newcommand{\firstdreamrow}[2]{
+            \sdaps_qobject_begin:nnn {  } { Option } {#2}
+            \sdaps_qobject_append_var:n {#2}
+                \sdaps_checkbox_set_type:n {singlechoice}
+                 #1 &
+            \sdaps_answer:n {#2} \sdaps_checkbox:nn {} {1} \hspace{4pt}Ja  &
+                \sdaps_answer:n {#2} \sdaps_checkbox:nn {} {0} \hspace{4pt}Nei &
+
+            \sdaps_qobject_end:n {  }
+        }
+        \newcommand{\dreamrow}[3]{
+            \sdaps_qobject_begin:nnn {  } { Option } {#2}
+            \sdaps_qobject_append_var:n {#2}
+                \sdaps_checkbox_set_type:n {singlechoice}
+                #1 &
+            \sdaps_answer:n {#2} \sdaps_checkbox:nn {} {1} \hspace{4pt}Ja  &
+                \sdaps_answer:n {#2} \sdaps_checkbox:nn {} {0} \hspace{4pt}Nei &
+                \sdaps_answer:n {#2} \sdaps_checkbox:nn {} {2} \hspace{4pt}#3
+
+            \sdaps_qobject_end:n {  }
+        }
+        \ExplSyntaxOff
+        \begin{tabular}{m{10cm}m{1.5cm}m{1.5cm}m{5.5cm}}
+
+            \firstdreamrow{b. Har pasienten noen gang blitt skadet pga denne oppførselen? (sett ring rundt svaret)}{I_rbd_injury}
+            \\\\%[1cm]
+            \dreamrow{c. Har en sengepartner blitt skadet pga oppførselen?}{I_rbd_injurybedp}{Har ingen sengepartner}
+            \\\\ %[1cm]
+            \dreamrow{d. Har pasienten fortalt om drømmer hvor deltaker ble jaget/angrepet/ som involverte forsvar av seg selv?}{I_rbd_defense}{Aldri fortalt om drømmer}
+            \\\\ %[1cm]
+            \dreamrow{e. Dersom pasienten våknet og fortalte om en drøm, stemte detaljene i drømmen med bevegelsene deltaker gjorde i søvne?}{I_rbd_matchmov}{Aldri fortalt om drømmer}
+            \\\\ %[1cm]
+        \end{tabular}
+
+   \newpage
+   \section{IQCODE – Spørreskjema til pårørende}
+
+          \setlength{\arrayrulewidth}{1mm}
+          \setlength{\tabcolsep}{10pt}
+            \begin{tabular}{|p{13.5cm}p{7cm}}
+                Når du besvarer spørsmålene, tenk på hvordan  din slektning eller venn var for ti år siden, og sammenlign med situasjonen i dag.  Nedenfor er angitt noen situasjoner hvor vedkommende må bruke sitt intellekt. Vurder om dette er blitt bedre, er uforandret eller har forverret seg i løpet av de siste ti årene. Hvis din slektning eller venn ikke husket hvor han/hun la fra seg ting for ti år siden og det samme er tilfelle i dag, skal dette besvares med ikke særlig forandret. &
+
+                    SVARALTERNATIV \newline
+                    1 Mye bedre \newline
+                    2 Litt bedre \newline
+                    3 Ikke særlig forandret \newline
+                    4 Litt verre \newline
+                    5 Mye verre \newline
+            \end{tabular}
+            \renewcommand{\arrayrulewidth}{0.4pt}
+
+            \begin{optiongroup}[var=iqcode, rowsep=5pt]{}
+                \choice[val=1]{1}
+                \choice[val=2]{2}
+                \choice[val=3]{3}
+                \choice[val=4]{4}
+                \choice[val=5]{5}
+              \question{1. Huske ting som gjelder familie og venner, f.eks. yrke, fødselsdager og adresser}
+                \question{2. Huske ting som nylig har hendt}
+                \question{3. Huske samtaler noen dager etterpå}
+                \question{4. Huske egen adresse og eget telefonnummer}
+                \question{5. Huske hvilken dag og måned det er}
+                \question{6. Huske hvor ting vanligvis er oppbevart}
+                \question{7. Huske hvor ting ligger selv om de ikke er lagt på vanlig sted}
+                \question{8. Vite hvordan en bruker kjente husholdningsapparater}
+                \question{9. Lære seg å bruke et nytt redskap eller apparat i huset}
+                \question{10. Lære seg nye ting i sin alminnelighet}
+                \question{11. Følge handlingen i en bok eller på TV}
+                \question{12. Ta avgjørelser i hverdagen}
+                \question{13. Håndtere penger ved innkjøp}
+                \question{14. Ta hånd om personlig økonomi, pensjon, bank osv.}
+                \question{15.Regneferdigheter i dagliglivet, f.eks. å vite hvor mye mat en skal kjøpe inn, hvor lang tid det går mellom besøk fra familie og venner osv.}
+                \question{16. Bruke sin intelligens til å forstå ting som skjer og resonnere fornuftig }
+          \end{optiongroup}
+
+          % \textbox*[var=iqcode_avg_text]{1cm}{Gjennomsnittsskår ()}
+
+          %% 5.0.2 added an info box to state that the avarage is computed in the app. 
+          \begin{tcolorbox}
+            \small
+            Skåringsveiledning: Summer skårene på hvert spørsmål til en totalsum. Totalsum deles på antall besvarte spørsmål for å få gjennomsnittsskår.\newline
+            Gjennomsnittskåre vil bli beregnet automatisk ved import til forsknings databasen.
+            \normalsize
+          \end{tcolorbox}
+
+  \newpage
+  \section{Belastningsskala – pårørende}
+
+          \setlength{\tabcolsep}{10pt}
+            \begin{tabular}{p{13.5cm}p{6cm}}
+                  &
+                    SVARALTERNATIV \newline
+                    0 Aldri / ingen \newline
+                    1 Sjelden / litt \newline
+                    2 Av og til / moderat \newline
+                    3 Ofte / ganske mye \newline
+                    4 Alltid / svært mye
+            \end{tabular}
+            \setlength{\tabcolsep}{2pt}
+          \vspace{0.5em}
+            \begin{optiongroup}[var=rss]{}
+                \choice[val=0]{0}
+                \choice[val=1]{1}
+                \choice[val=2]{2}
+                \choice[val=3]{3}
+                \choice[val=4]{4}
+
+              \question{1. Føler du noen gang at du ikke lenger kan håndtere situasjonen?}
+                \question{2. Føler du noen gang at du trenger en pause / et avbrekk?}
+                \question{3. Blir du noen gang deprimert av situasjonen?}
+                \question{4. Går situasjonen på noen måte ut over din egen helse?}
+                \question{5. Er du redd for at det kan skje en ulykke med ham/henne?}
+                \question{6. Føler du noen gang at det ikke finnes noen løsning på vanskelighetene?}
+                \question{7. Er det vanskelig for deg å dra på ferie?}
+                \question{8. Hvor mye er ditt sosiale liv blitt påvirket?}
+                \question{9. Hvor mye er rutiner i hjemmet ditt blitt forandret?}
+                \question{10. Er søvnen din forstyrret pga. ham/henne?}
+                \question{11. Er din levestandard blitt redusert?}
+                \question{12. Føler du deg noen gang flau over ham/henne?}
+                \question{13. Hender det at du er forhindret fra å ha gjester hjemme?}
+                \question{14. Blir du noen gang sint og sur på ham/henne?}
+                \question{15. Føler du deg noen gang frustrert (oppgitt) over ham/henne?}
+          \end{optiongroup}
+
+    \begin{tcolorbox}
+      \small
+        Sum skår (min 0 maks 60)
+        \normalsize
+    \end{tcolorbox}
+    \twodigits{rss_total}{}
+
+
+    \captionpagelarge{Denne siden har med vilje ingen tekst}
+    \captionpagehuge{Testbatteri}
+  % \newpage
+  %
+  %   \vspace*{\fill}
+  %   \begin{center}
+  %     \Huge \textbf{Testbatteri}\\[2em]
+  %
+  %   \end{center}
+  %   \vspace*{\fill}
+  %
+  %   \newpage
+  % Appendix order
+  %MMSE, CERAD-ordliste,Klokketest, VOSP silhuetter, Trail making-test, FAS og KDV
+
+  % 14 Dummy pages for Clock test and TMT
+  \ExplSyntaxOn
+  \int_step_inline:nnnn { 1 } { 1 } { 14 } { Dummy page for tests \newpage }
+  \ExplSyntaxOff
+
+
+
+
+   \begin{tcolorbox}
+    \small
+      Utdanningsnivå/antall år samt alder trengs for å vurdere testresultatene opp mot normer.
+      \normalsize
+   \end{tcolorbox}
+
+   \begin{tcolorbox}
+     T-score er en standardisering der score 50 er gjennomsnitt og ett standardavvik er 10, slik at T-score 35 betyr en score 1,5 standardavvik under gjennomsnittet for normpopulasjonen. T-score beregnes slik:\\
+     Z-score = (Deltakers score - Gj.snitt i norm) / Standardavvik i norm. T-score = (10 x Z-score) + 50\\
+     T-scorer vil bli beregnet automatisk ved import til forskningsdatabasen.\\[0.3em]
+     Standardavviket er et mål for spredningen av normalfordelte verdier. Standardavviket gir verdienes gjennomsnittlige avstand fra gjennomsnittet.\\
+     I en normalfordeling vil 68,27\% av datasettet være under ett standardavvik fra gjennomsnittet. 95,45\% er under to standardavvik fra gjennomsnittet og 99.73\% under tre standardavvik.\\
+
+     Tolkning i forhold til førerkort$^1$\\[0.2em]
+     \begin{tabular}{|l |l |l |l|}
+       \hline
+       \textbf{Test/kategori} (NR3) & Indikerer godkjent & Tvil & Indikerer svikt\\
+       \hline
+       MMSE & 26 - 30 & 19 - 25 &  $\leq$ 18 \\
+       \hline
+       Klokketest KT & 4 - 5 & 2 - 3 & 0 - 1 \\
+       \hline
+       TMT-A & $\leq$ 60 sek & 61 - 110 sek & $\geq$ 111 sek \\
+       \hline
+       TMT-B & $\leq$ 170 sek & 171 - 300 sek & $\geq$ 301 sek \\
+       \hline
+     \end{tabular}
+
+      \vspace{0.4em}
+      \footnotesize
+      1. Helsedirektoratet. Førerkortveilederen. Førerkort – veileder til helsekrav (gjeldende fra 1. oktober 2016): Kognitiv svikt. Sist oppdatert: 10.07.2018 IS-nummer: 2541. helsedirektoratet.no
+      \normalsize
+   \end{tcolorbox}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %	        MMSE              %
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    \section{MMSE - NR}
+
+
+    \begin{tcolorbox}
+      \small
+      Screening cut-off normal $\geq$	 28
+      \normalsize
+    \end{tcolorbox}
+    \qhead{Total score}
+    \writtendigits{total_mmse_text}{2}
+  	\begin{choicegroup}[colsep=2pt,singlechoice, noalign,  var=mmse_total]{}
+  				\choice[val=0]{0}
+  			\choice[val=1]{1}
+  			\choice[val=2]{2}
+  			\choice[val=3]{3}
+  			\choice[val=4]{4}
+  			\choice[val=5]{5}
+  			\choice[val=6]{6}
+  			\choice[val=7]{7}
+  			\choice[val=8]{8}
+  			\choice[val=9]{9}
+  			\choice[val=10]{10}
+  			\choice[val=11]{11}
+  			\choice[val=12]{12}
+  			\choice[val=13]{13}
+  			\choice[val=14]{14}
+  			\choice[val=15]{15}
+  			\choice[val=16]{16}
+  			\choice[val=17]{17}
+  			\choice[val=18]{18}
+  			\choice[val=19]{19}
+  			\choice[val=20]{20}
+  			\choice[val=21]{21}
+  			\choice[val=22]{22}
+  			\choice[val=23]{23}
+  			\choice[val=24]{24}
+  			\choice[val=25]{25}
+  			\choice[val=26]{26}
+  			\choice[val=27]{27}
+  			\choice[val=28]{28}
+  			\choice[val=29]{29}
+  			\choice[val=30]{30}
+  					\question{}
+  	\end{choicegroup}
+
+
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %	        CERAD              %
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \section{CERAD ORDLISTE}
+  \ExplSyntaxOn
+  	\newcommand{\ceradsum}[2]{
+  		\begin{choicegroup}[singlechoice, var=#1]{#2}
+  			\choice[val=0]{0}
+  			\choice[val=1]{1}
+  			\choice[val=2]{2}
+  			\choice[val=3]{3}
+  			\choice[val=4]{4}
+  			\choice[val=5]{5}
+  			\choice[val=6]{6}
+  			\choice[val=7]{7}
+  			\choice[val=8]{8}
+  			\choice[val=9]{9}
+  			\choice[val=9]{10}
+  			\question{}
+
+  		\end{choicegroup}
+      \vspace{0.5em}
+      % \hrule
+  	}
+  	\ExplSyntaxOff
+
+
+    \begin{tcolorbox}
+        Norm brukt i screening: Sotaniemi et al. 2012\\[0.2em]
+  	   \begin{tabular}{l c c}
+        &  Gj.snitt i norm & St.avvik i norm \\
+        CERAD - Ordliste Læring &  19.9 & 3.5 \\
+        CERAD - Ordliste gjenkalling  & 6.5 & 1.8\\
+        CERAD - Ordliste gjenkalling \% av 20 & 95.6\% & 5.8\%
+      \end{tabular}
+    \end{tcolorbox}
+
+    \begin{multicols}{3}
+
+  \qhead{FORSØK 1 SUM}
+
+
+      \writtendigits{CERAD_Trial1}{2}
+      % \ceradsum{CERAD_Trial1}{}
+  \qhead{FORSØK 2 SUM}
+
+
+      \writtendigits{CERAD_Trial2}{2}
+      % \ceradsum{CERAD_Trial2}{}
+
+
+  \qhead{FORSØK 3 SUM}
+
+
+      \writtendigits{CERAD_Trial3}{2}
+    \end{multicols}
+
+  		% \ceradsum{CERAD_Trial3}{}
+
+
+
+  \qhead{Innlæring}
+
+
+      \writtendigits{CERAD_learning_text}{2}
+      \\
+      \begin{choicegroup}[singlechoice,colsep=2pt, noalign, var=CERAD_learning]{}
+  			\choice[val=0]{0}
+  			\choice[val=1]{1}
+  			\choice[val=2]{2}
+  			\choice[val=3]{3}
+  			\choice[val=4]{4}
+  			\choice[val=5]{5}
+  			\choice[val=6]{6}
+  			\choice[val=7]{7}
+  			\choice[val=8]{8}
+  			\choice[val=9]{9}
+  			\choice[val=9]{10}
+        \choice[val=11]{11}
+  			\choice[val=12]{12}
+  			\choice[val=13]{13}
+  			\choice[val=14]{14}
+  			\choice[val=15]{15}
+  			\choice[val=16]{16}
+  			\choice[val=17]{17}
+  			\choice[val=18]{18}
+  			\choice[val=19]{19}
+  			\choice[val=20]{20}
+  			\choice[val=21]{21}
+  			\choice[val=22]{22}
+  			\choice[val=23]{23}
+  			\choice[val=24]{24}
+  			\choice[val=25]{25}
+  			\choice[val=26]{26}
+  			\choice[val=27]{27}
+  			\choice[val=28]{28}
+  			\choice[val=29]{29}
+  			\choice[val=30]{30}
+  			\question{}
+
+  		\end{choicegroup}
+
+      %\newpage %avoiding frame coloring
+
+  \qhead{GJENKALLING 1 SUM}
+
+      \writtendigits{CERAD_Recall_text}{2}
+  		\ceradsum{CERAD_Recall}{}
+
+
+Gjenkjenning
+      \writtendigits{CERAD_Recog}{2}
+  		\begin{choicegroup}[colsep=2pt,singlechoice, noalign,  var=CERAD_Recog]{}
+  		\choice[val=0]{0}
+  		\choice[val=1]{1}
+  		\choice[val=2]{2}
+  		\choice[val=3]{3}
+  		\choice[val=4]{4}
+  		\choice[val=5]{5}
+  		\choice[val=6]{6}
+  		\choice[val=7]{7}
+  		\choice[val=8]{8}
+  		\choice[val=9]{9}
+  		\choice[val=9]{10}
+  		\choice[val=10]{10}
+  		\choice[val=11]{11}
+  		\choice[val=12]{12}
+  		\choice[val=13]{13}
+  	\choice[val=14]{14}
+  	\choice[val=15]{15}
+  	\choice[val=16]{16}
+  	\choice[val=17]{17}
+  	\choice[val=18]{18}
+  	\choice[val=19]{19}
+  	\choice[val=20]{20}
+  	\question{}
+
+  	\end{choicegroup}
+
+    \section{KLOKKETEST}
+
+    \begin{tcolorbox}
+      \small
+      Screening cut-off normal $\geq$	4
+      \normalsize
+    \end{tcolorbox}
+
+Klokketest
+    \writtendigits{clock_score_text}{2}
+  \begin{choicegroup}[colsep=2pt,singlechoice, noalign,  var=clock_score]{}
+  		\choice[val=0]{0}
+  		\choice[val=1]{1}
+  		\choice[val=2]{2}
+  		\choice[val=3]{3}
+  		\choice[val=4]{4}
+  		\choice[val=5]{5}
+  		\question[var=1]{}
+  	\end{choicegroup}
+
+
+
+    \section{VOSP Silhouettes}
+    \ExplSyntaxOn
+    \newcommand{\vosprow}[3]{
+        #1 & #2 &
+        \sdaps_qobject_begin:nnn {  } { Option } {#3}
+          \sdaps_checkbox_set_type:n {singlechoice}
+          \sdaps_qobject_append_var:n {#3}
+          \inlinefilltextboxorange{0.8cm}{#3_ans}  &
+          \sdaps_answer:n { #3} \sdaps_checkbox:nn {} {1}
+          \sdaps_qobject_end:n {  }
+          \\[0.8cm]
+
+
+    }
+    \ExplSyntaxOff
+
+
+
+     \begin{tcolorbox}
+        Norm brukt i screening: Warrington \& James 1991\\[0.2em]
+  	   \begin{tabular}{l c c}
+        &  Gj.snitt i norm & St.avvik i norm \\
+        $<$ 50 år  & 23,1 & 4,1\\
+        $>$ 50 år & 22,2\% & 4,0\%
+      \end{tabular}
+    \end{tcolorbox}
+
+
+
+  \qhead{Total score}
+
+     \writtendigits{vosp_total_text}{2}
+     \begin{choicegroup}[colsep=2pt,singlechoice, noalign,  var=vosp_total]{}
+          \choice[val=0]{0}
+        \choice[val=1]{1}
+        \choice[val=2]{2}
+        \choice[val=3]{3}
+        \choice[val=4]{4}
+        \choice[val=5]{5}
+        \choice[val=6]{6}
+        \choice[val=7]{7}
+        \choice[val=8]{8}
+        \choice[val=9]{9}
+        \choice[val=10]{10}
+        \choice[val=11]{11}
+        \choice[val=12]{12}
+        \choice[val=13]{13}
+        \choice[val=14]{14}
+        \choice[val=15]{15}
+        \choice[val=16]{16}
+        \choice[val=17]{17}
+        \choice[val=18]{18}
+        \choice[val=19]{19}
+        \choice[val=20]{20}
+        \choice[val=21]{21}
+        \choice[val=22]{22}
+        \choice[val=23]{23}
+        \choice[val=24]{24}
+        \choice[val=25]{25}
+        \choice[val=26]{26}
+        \choice[val=27]{27}
+        \choice[val=28]{28}
+        \choice[val=29]{29}
+        \choice[val=30]{30}
+            \question{}
+    \end{choicegroup}
+
+
+   \newpage
+    \section{TRAIL-MAKING TEST}
+
+    \begin{tcolorbox}
+      \small
+      Norm brukt i screening: Heaton et al. 2004
+      \normalsize
+    \end{tcolorbox}
+
+
+  \qhead{Tid del A (sekunder)}
+
+    \writtendigits{tmta_sec_text}{3}
+  	\threedigits{tmta_sec}{}
+
+
+  \qhead{Number of mistakes (A)}
+
+    \writtendigits{tmta_mistake_text}{2}
+  	\twodigits{tmta_mistake}{}
+
+    \qbegin{tmta_completed}{Option}{}
+    \appendvar{tmta_completed}
+      Ikke fullført \myanswer{tmta_completed} \mycheckbox{}{}
+    \qend{tmta_completed}
+
+
+  \qhead{Tid del B (sekunder)}
+
+    \writtendigits{tmtb_sec_text}{3}
+  	\threedigits{tmtb_sec}{}
+
+
+  \qhead{Number of mistakes (B)}
+
+    \writtendigits{tmtb_mistake_text}{2}
+  	\twodigits{tmtb_mistake}{}
+
+    \qbegin{tmtb_completed}{Option}{}
+    \appendvar{tmtb_completed}
+      Ikke fullført \myanswer{tmtb_completed} \mycheckbox{}{}
+    \qend{tmtb_completed}
+
+
+
+  	\section{COWAT - FAS}
+
+          \begin{tcolorbox}
+            \small
+            Norm brukt i screening: Heaton et al. 2004
+            \small
+          \end{tcolorbox}
+
+          \begin{multicols}{3}
+
+              \qhead{Antall korrekte ord, første bokstav}
+
+            \qbegin{question}{Head}{cowat_1let_head}
+
+                \writtendigits{COWAT_1Let_text}{2}
+            \qend{question}
+
+            % \twodigits{COWAT_1Let}{}
+
+              \qhead{Antall korrekte ord, andre bokstav}
+
+            \qbegin{question}{Head}{cowat_2let_head}
+
+              \writtendigits{COWAT_2Let_text}{2}\\
+            \qend{question}
+            % \twodigits{COWAT_2Let}{}
+
+              \qhead{Antall korrekte ord, tredje bokstav}
+
+            \qbegin{question}{Head}{cowat_3let_head}
+
+              \writtendigits{COWAT_3Let_text}{2}
+            \qend{question}
+            % \twodigits{COWAT_3Let}{}
+          \end{multicols}
+
+
+            \qhead{Totalt antall korrekte ord}
+
+          \qbegin{question}{Head}{cowat_total_head}
+
+            \writtendigits{COWAT_Total_text}{3}
+          \qend{question}
+          \threedigits{COWAT_Total}{}
+
+      \section{MOCA}
+      \qhead{Total score}
+    \writtendigits{moca_total_text}{2}
+     \begin{choicegroup}[colsep=2pt,singlechoice, noalign,  var=moca]{}
+          \choice[val=0]{0}
+          \choice[val=1]{1}
+          \choice[val=2]{2}
+          \choice[val=3]{3}
+          \choice[val=4]{4}
+          \choice[val=5]{5}
+          \choice[val=6]{6}
+          \choice[val=7]{7}
+          \choice[val=8]{8}
+          \choice[val=9]{9}
+          \choice[val=10]{10}
+          \choice[val=11]{11}
+          \choice[val=12]{12}
+          \choice[val=13]{13}
+          \choice[val=14]{14}
+          \choice[val=15]{15}
+          \choice[val=16]{16}
+          \choice[val=17]{17}
+          \choice[val=18]{18}
+          \choice[val=19]{19}
+          \choice[val=20]{20}
+          \choice[val=21]{21}
+          \choice[val=22]{22}
+          \choice[val=23]{23}
+          \choice[val=24]{24}
+          \choice[val=25]{25}
+          \choice[val=26]{26}
+          \choice[val=27]{27}
+          \choice[val=28]{28}
+          \choice[val=29]{29}
+          \choice[val=30]{30}
+          \question[var=total]{}
+      \end{choicegroup}
+
+          %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+          %	        NEVROLOGISK STATUS            %
+          %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+          \captionpagelarge{Denne siden har med vilje ingen tekst}
+          \captionpagehuge{Klinisk Undersøkelse}
+          % \newpage
+          %
+          %   \vspace*{\fill}
+          %   \begin{center}
+          %     \Huge \textbf{Klinisk Undersøkelse}\\[2em]
+          %
+          %   \end{center}
+          %   \vspace*{\fill}
+          %
+          %   \newpage
+          \section{KLINISK UNDERSØKELSE}
+            % \begin{optiongroup}{Somatisk undersøkelse?}
+            %   \choice[val=1]{Ja}
+            %   \choice[val=0]{Nei}
+            %   \question[var=aus_hear]{Auskultasjon hjerte}
+            %   \question[var=aus_pulm]{Auskultasjon lunger}
+            %   \question[var=aus_carot]{Auskultasjon halskar}
+            %   \question[var=smell]{Luktesans (Kaffe, kanel, kamfer)}
+            % \end{optiongroup}
+
+            \begin{optiongroup}{Somatisk undersøkelse?}
+              \choice[val=1]{Normalt}
+              \choice[val=0]{Ikke normalt}
+              \question[var=aus_hear]{Auskultasjon hjerte}
+              \question[var=aus_pulm]{Auskultasjon lunger}
+              \question[var=aus_carot]{Auskultasjon halskar}
+
+            \end{optiongroup}
+
+
+           \begin{optiongroup}{Nevrologisk undersøkelse?}
+           \choice[val=1]{Normalt}
+           \choice[val=0]{Ikke normalt}
+             \question[var=cranial]{Hjernenerveundersøkelse}
+             \question[var=coordina]{Koordinasjon/ataksi}
+             \question[var=motor]{Kraft, finmotorikk, tempo}
+             \question[var=reflex]{Reflekser}
+             \question[var=tonus]{Tonus}
+              \question[var=sensor]{Sensibilitet}
+             \question[var=primitive]{Primitive reflekser (Glabella, palmo-mental, snout, gripe-refleks)}
+             \question[var=posture_gait]{Stående stilling/gange}
+           \end{optiongroup}
+           Ev. Kommentar\\[0.5em]
+          \inlinefilltextbox{2cm}{clinic_comment}
+
+
+
+
+          %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+          %	        UPDRS            %
+          %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+          \section{Motorisk UPDRS}
+          \begin{optionquestion}[cols=1, var=parkinsonistic]{}
+             \choiceitem{Ikke parkinsonistisk}
+           \end{optionquestion}
+
+          \twodigits{updrs_total}{Total}
+          \newpage
+          % 2 Dummy pages for old test 
+          % and 1 page for MDS UPDRS summing
+          \ExplSyntaxOn
+          \int_step_inline:nnnn { 0 } { 1 } { 2 } { Dummy page for updrs \newpage }
+          \ExplSyntaxOff
+
+
+
+
+    \section{MDS CLINICAL DIAGNOSTIC CRITERIA FOR PD}
+           \begin{tcolorbox}
+            \textbf{Supportive criteria}
+            \begin{enumerate}
+              \item Clear dramatic beneficial response to dopaminergic therapy
+              \item Presence of levodopa induced dyskinesia
+              \item Rest tremor of a limb, documented on clinical exam
+              \item The presence of either olfactory los or cardiac sympathetic denervation on MIBG scint
+            \end{enumerate}
+            \textbf{Absolute exclusion criteria}
+            \begin{enumerate}
+              \item Unequivocal cerebellar abnormalities, such as cerebellar gait, limb ataxia…
+              \item Downward vertical supranuclear gaze palsy
+              \item Diagnosis of probable behavioral variant FTD or PPA
+              \item Parkinsonian features restricted to the lower limbs for more than 3 yrs
+              \item Treatment with a dopamine reseptor blocker or …. Drug induced parkinsonism
+              \item Absence of observable response to high dose levodopa despite at least moderate severityof disease
+              \item Uniequivocal cortical sensory loss
+              \item Normal functional neuroimagingof the presynaptic dopaminergic system
+              \item Documentation of an alternative condition known to produce parkinsosnism…
+            \end{enumerate}
+            \textbf{Red flags}
+            \begin{enumerate}
+              \item Rapid progression of gait imp
+              \item A complete absence of progression of motor symptoms
+              \item Early bulbar dysfunction severe dysphonia…
+              \item Inspiratory respiratory dysfunction
+              \item Severe autonomic failure in the forst 5 yrs…
+              \item Recurrent falls because of impaired balance
+              \item Disproportionate anterocollis
+              \item Absence of any of the common nonmotor features…
+              \item Otherwise-unexplained pyramidal signs
+              \item Bilateral symmetric parkinsosnism
+            \end{enumerate}
+           \end{tcolorbox}
+           \newpage
+           \color{red}
+           \textbf{Criteria application}
+           
+
+        \yesno{mds_park}{Does the patient have parkinsosnism as defined by the MDS criteria}
+    \yesno{mds_abs_excl}{Are any absolute exclusion criteria present?}    
+
+    \begin{choicegroup}[colsep=2pt,singlechoice, noalign,  var=mds_n_redflags]{Number of red flags present}
+          \choice[val=0]{0}
+        \choice[val=1]{1}
+        \choice[val=2]{2}
+        \choice[val=3]{3}
+        \choice[val=4]{4}
+        \choice[val=5]{5}
+        \choice[val=6]{6}
+        \choice[val=7]{7}
+        \choice[val=8]{8}
+        \choice[val=9]{9}
+        \choice[val=10]{10}
+            \question{}
+    \end{choicegroup}
+    \begin{choicegroup}[colsep=2pt,singlechoice, noalign,  var=mds_n_supportive]{Number of supportive criteria present}
+          \choice[val=0]{0}
+        \choice[val=1]{1}
+        \choice[val=2]{2}
+        \choice[val=3]{3}
+        \choice[val=4]{4}
+        \choice[val=5]{5}
+        \choice[val=6]{6}
+        \choice[val=7]{7}
+        \choice[val=8]{8}
+        \choice[val=9]{9}
+        \choice[val=10]{10}
+            \question{}
+    \end{choicegroup}
+    \yesno{mds_2_supportive}{Are there at least 2 supportive criteria and no red flags?}
+    \yesno{mds_2_redflags}{Are there more than 2 red flags?}
+    \yesno{mds_redflags_eqless_supportive}{Is the number of red flags equal to or less than the number of supportive criteria}
+    \color{black}
+
+    \newpage
+     \section{KDV: KLINISK DEMENSVURDERING}
+     \small
+ 		% !!!! NO FLOAT ALLOWED AS VALUES, 50 => 0.5
+ 		\begin{optionquestion}[cols=1, colsep=2pt,singlechoice, var=CDR_Mem]{Hukommelse}
+ 		\choiceitem[val=0]{[0] - Ingen tap av hukommelse eller lett vekslende glemsomhet}
+ 		\choiceitem[val=50]{[0,5] - Lett, men permanent glemsomhet, begrenset gjenkalling av hendelser, mild glemsomhet}
+ 		\choiceitem[val=1]{[1] - Moderat hukommelsestap, mer uttalt for nylig inntrufne hendelser. Svekkelsen påvirker dagliglivets aktiviteter}
+ 		\choiceitem[val=2]{[2] - Alvorlig hukommelsestap. Bare meget godt innlært materiale huskes, nytt materiale tapes raskt}
+ 		\choiceitem[val=3]{[3] - Alvorlig hukommelsestap. Bare fragmenter igjen}
+ 		\end{optionquestion}
+ 		\begin{optionquestion}[cols=1, colsep=2pt,singlechoice, var=CDR_Orien]{Orienteringsevne}
+ 		\choiceitem[val=0]{[0] - Helt orientert}
+ 		\choiceitem[val=50]{[0,5] - Helt orientert, bortsett fra lette vanskeligheter med tidsforhold}
+ 		\choiceitem[val=1]{[1] - Moderate vansker med tidsorientering, ved undersøkelse orientert for sted, geografisk desorientert andre steder}
+ 		\choiceitem[val=2]{[2] - Alvorlige vansker med tidsforhold, vanligvis desorientert for tid, ofte for sted}
+ 		\choiceitem[val=3]{[3] - Kun orientert for person}
+ 		\end{optionquestion}
+ 		\begin{optionquestion}[cols=1, colsep=2pt,singlechoice, var=CDR_Judg]{Vurderingsevne}
+ 		\choiceitem[val=0]{[0] - Løser dagliglivets problemer og håndterer ærender og økonomi bra, vurderingsevne god sammenliknet med tidligere}
+ 		\choiceitem[val=50]{[0,5] - Lett nedsatt evne til å løse dagliglivets problemer}
+ 		\choiceitem[val=1]{[1] - Moderate vansker med å håndtere oppgaver, sosial vurderingsevne vanligvis bevart}
+ 		\choiceitem[val=2]{[2] - Svært svekket evne til å håndtere oppgaver, sosial vurderingsevne vanligvis svekket}
+ 		\choiceitem[val=3]{[3] - Ute av stand til å bedømme eller løse problemer}
+ 		\end{optionquestion}
+ 		\begin{optionquestion}[cols=1, colsep=2pt,singlechoice, var=CDR_Commun]{Samfunnsaktiviteter}
+ 		\choiceitem[val=0]{[0] - Fungerer selvstendig i sitt vanlige arbeid, ved innkjøp, i frivillig arbeid og sosiale grupper}
+ 		\choiceitem[val=50]{[0,5] - Lett svekkelse i disse aktivitetene}
+ 		\choiceitem[val=1]{[1] - Ikke i stand til å fungere selvstendig i disse aktivitetene, men vil fortsatt kunne delta i noen, synes å fungere normalt ved tilfeldig møte}
+ 		\choiceitem[val=2]{[2] - Vil ikke forvente selvstendig fungering utenfor hjemmet. Fremstår som bra nok til å bli tatt med på aktiviteter utenfor eget hjem}
+ 		\choiceitem[val=3]{[3] - Vil ikke forvente selvstendig fungering utenfor hjemmet. Fremstår som for dårlig til å bli tatt med på aktiviteter utenfor eget hjem}
+ 		\end{optionquestion}
+ 		\begin{optionquestion}[cols=1, colsep=2pt,singlechoice, var=CDR_Home]{Hjem og fritidsinteresser}
+ 		\choiceitem[val=0]{[0] - Hjemmeliv, fritidsinteresser og intellektuelle interesser er godt bevart}
+ 		\choiceitem[val=50]{[0,5] - Hjemmeliv, fritidsinteresser og intellektuelle interesser er lett svekket}
+ 		\choiceitem[val=1]{[1] - Lett, men avgjort svikt i evnen til å fungere hjemme, vanskeligere husarbeid er oppgitt, mer kompliserte hobbyer og interesser er oppgitt}
+    \choiceitem[val=2]{[2] - Kun enklere husarbeid er opprettholdt, svært begrensede interesser. Interessene er dårlig opprettholdt}
+ 		\choiceitem[val=3]{[3] - Ingen fungering av betydning i hjemmet}
+ 		\end{optionquestion}
+ 		\begin{optionquestion}[cols=1, colsep=2pt,singlechoice, var=CDR_PC]{Egenomsorg}
+ 		\choiceitem[val=0]{[0] - Helt selvhjulpen med egenomsorg}
+ 		\choiceitem[val=1]{[1] - Trenger påminning om å stelle seg selv}
+ 		\choiceitem[val=2]{[2] - Trenger hjelp til personlig hygiene, påkledning og til å ta vare på personlige eiendeler}
+ 		\choiceitem[val=3]{[3] - Trenger mye hjelp til personlig omsorg, ofte inkontinent}
+ 		\end{optionquestion}
+
+
+
+    \begin{optionquestion}[cols=1, colsep=2pt,singlechoice, var=CDR_total]{Total KDV (evt kan følgende nettside brukes: http://www.biostat.wustl.edu/~adrc/cdrpgm/)}
+   		\choiceitem[val=0]{[0]}
+   		\choiceitem[val=50]{[0,5]}
+   		\choiceitem[val=1]{[1]}
+   		\choiceitem[val=2]{[2]}
+   		\choiceitem[val=3]{[3]}
+ 		\end{optionquestion}
+
+    \writteninput{sum_boxes}
+    \normalsize
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     \newpage
+     \begin{optionquestion}[singlechoice, var=subj_group]{}
+        \choiceitem[val=0]{Symptomsubjekt}
+        \choiceitem[val=3]{Kontrollsubjekt}
+      \end{optionquestion}
+
+ 		\section{Stadieklassifisering}
+
+ 		\ExplSyntaxOn
+ \newcommand{\diagrowrest}[4]{
+ 	\sdaps_qobject_begin:nnn {  } { Option } {stag_#4}
+ 	\sdaps_qobject_append_var:n {stag_#4}
+ 	\sdaps_checkbox_set_type:n {singlechoice}
+ 				#1 &
+ 	\sdaps_answer:n { stag_#4} \vbox{ \vspace{3pt} \sdaps_checkbox:nn {} {#2} } &
+ 	#3
+ 	\sdaps_qobject_end:n {}
+ }
+ \ExplSyntaxOff
+
+ \begin{longtable}{|p{4cm} | p{0.5cm} | p{12cm}|}
+   \hline
+   \diagrowrest{Subjektive kognitive symptomer }{}{Selv-opplevd persisterende reduksjon i kognitiv funksjon sammenliknet med tidligere normalt nivå og som ikke er relatert til en akutt hendelse.}{scd_symptoms}
+     \\
+
+   \diagrowrest{Ingen subjektive kognitive symptomer}{}{}{no_scd_symptoms}
+
+     \\
+     \hline
+ \end{longtable}
+
+   \begin{longtable}{|p{4cm} | p{0.5cm} | p{12cm}|}
+     \hline
+
+     \diagrowrest{Normal kognitiv screening }{1}{Normale kognitive tester: T-score over 35 på CERAD utsatt gjenkalling, VOSP silhuetter, TMT B og FAS.}{normal_cs}
+     \\
+     \diagrowrest{Ikke normal kognitiv screening}{0}{}{not_normal_cs}
+     \\
+       \hline
+   \end{longtable}
+
+ \begin{longtable}{|p{4cm} | p{0.5cm} | p{12cm}|}
+
+ 			\hline
+      \diagrowrest{SCD}{4}{Oppfyller DDI-kriteriene for SCD:
+      \begin{enumerate}
+        \item Selv-opplevd persisterende reduksjon i kognitiv funksjon sammenliknet med tidligere normalt nivå og som ikke er relatert til en akutt hendelse.
+        \item Normale kognitive tester: T-score over 35 på CERAD utsatt gjenkalling,  silhuetter, TMT B og FAS.
+        \item Bevart funksjonsnivå slik at demens ikke foreligger.
+      \end{enumerate}}{scd}
+      \\
+        \hline
+      \diagrowrest{Mild kognitiv reduksjon\newline(MCI)}{6}{Oppfyller DDI-kriteriene for MCI:\newline \begin{enumerate}
+      \item Bekymring for kognitiv reduksjon (rapportert av deltaker, pårørende eller helsepersonell)\newline
+      \begin{itemize}
+        \item T-score 35 eller lavere i ett eller flere domener:
+        \item Hukommelse - CERAD utsatt gjenkalling
+        \item Eksekutive funksjoner - TMT B
+        \item Språk - FAS
+        \item Visuospatial funksjon - VOS
+      \end{itemize}
+
+      \item Bevart evne til å fungere uavhengig. Vanlig med milde problemer
+      med komplekse oppgaver, men klarer likevel fungere selvstendig
+      uten annet enn minimalt med hjelp.
+      \item Ikke dement: Den kognitive reduksjonen gir ikke svikt i sosial eller
+      yrkesmessig fungering.
+      \end{enumerate}}{mci}
+      \\
+ 			\hline
+      \diagrowrest{Demens}{8}{Kognitive og/el. atferdsmessige symptomer påvist både gjennom anamnese fra deltaker og komparent, og kognitiv testing. Omfatter minst to domener (hukommelse, nyinnlæring, resonnering, dømmekraft, gjennomføring av oppgaver, visuospatiale funksjoner, språk, personlighet, atferd, oppførsel). Representerer reduksjon fra tidligere og gir svik i evne til å fungere i arbeid eller vanlig aktivitet. Kan ikke forklares med delir el. psykiatrisk sykdom.}{dementia}
+ 			\\
+ 			\hline
+ 			\diagrowrest{Annet  \newline (Dersom deltaker ikke passer inn i noen av kategoriene)}{7}{Kommentar:}{other}
+ 			\\\hline
+
+
+ \end{longtable}
+
+
+ \newpage
+    \section{Oppsummering av undersøkelser}
+
+    \begin{choicequestion}[cols=1, var=mr, singlechoice]{MR hode}
+      \choiceitem[val=-999]{Ikke utført}
+    \end{choicequestion}
+
+    \begin{optiongroup}{}
+      \choice[val=-999]{N/A}
+      \choice[val=0]{0}
+      \choice[val=1]{1}
+      \choice[val=2]{2}
+      \choice[val=3]{3}
+      \choice[val=4]{4}
+
+      \question[var=gca, range={...,3}]{GCA}
+      \question[var=fazekas, range={...,3}]{Fazekas}
+      \question[var=mta_r]{MTA - Right}
+      \question[var=mta_l]{MTA - Left}
+      \question[var=pa, range={...,3}]{Koedam PA score}
+
+    \end{optiongroup}
+    Kommentar: \newline
+  	\inlinefilltextbox{2.5cm}{mr_comment}
+
+    \begin{optiongroup}{Parakliniske undersøkelser}
+      \choice[val=-999]{Ikke utført}
+      \choice[val=0]{Normal}
+      \choice[val=1]{Ikke normal}
+
+      \question[var=fdg_pet]{FGD-PET}
+      \question[var=amypet]{Amyloid-PET}
+      \question[var=perfusion_spect]{Perfusion SPECT}
+      \question[var=eeg]{EEG}
+      \question[var=datscan]{Dopamine transporter scan}
+    \end{optiongroup}
+    Kommentar: \newline
+  	\inlinefilltextbox{2.5cm}{paraclinical_comment}
+
+    \qhead{CSF}
+
+    \begin{optionquestion}[cols=1, var=csf_done]{}
+       \choiceitem{Ikke utført}
+     \end{optionquestion}
+
+    \begin{tabular}{l c r l r l}
+      & Verdi & Ref. &  \\
+        \qbegin{abeta}{Text}{abeta_text}
+            A$\beta$42 &  \mytextbox{abeta}{3mm}{7mm}{25mm}{0} & > 1100 & & &
+        \qend{abeta}\\[1em]
+
+        \qbegin{ttau}{Text}{ttau_text}
+            T-tau &
+             \mytextbox{ttau}{3mm}{7mm}{25mm}{0} &
+         \qend{ttau}
+         \qbegin{csf_ref}{Option}{csf_ref}
+         \ExplSyntaxOn
+         \sdaps_checkbox_set_type:n {singlechoice}
+         \appendvar{csf_ref}
+         \ExplSyntaxOff
+         < 300 & \myanswer{csf_ref} \mycheckbox{csf_ref_300}{0} & \hspace{0.5em} Annen. Noter oppgitt referanseverdi i kommentarfeltet & \myanswer{csf_ref_other} \mycheckbox{csf_ref_other}{1}
+         \qend{csf_ref}\\[1em]
+
+
+        \qbegin{ptau}{Text}{ptau_text}
+            P-tau & \mytextbox{ptau}{3mm}{7mm}{25mm}{0} & < 27 & & &
+        \qend{ptau}\\
+    \end{tabular}
+
+
+    \begin{tcolorbox}
+       Angi referanseverdien oppgitt i det kliniske prøvesvaret.
+    \end{tcolorbox}
+
+    Kommentarer, andre relevante undersøkelser eller blodprøvesvar: \newline
+  	\inlinefilltextbox{2cm}{summary_comment}
+    \\[0.3em]
+
+         \section{Etiologisk diagnose}
+
+         \begin{optionquestion}[var=diag, cols=1]{Diagnose}
+             \choiceitem[val=0]{Ingen holdepunkter for nevrodegenerativ sykdom}
+             \choiceitem[val=1]{Alzheimers sykdom, fyll ut pkt 25.2 dersom mulig}
+             \choiceitem[val=2]{Vaskulær kognitiv svikt, fyll ut pkt 25.3 dersom mulig}
+             \choiceitem[val=3]{Lewy legeme sykdom, fyll ut pkt 25.4 dersom mulig}
+             \choiceitem[val=4]{Frontotemporal degenerasjon, fyll ut pkt 25.5 dersom mulig}
+             \choiceitem[val=5]{Blandet etiologi, fyll ut pkt 25.6 dersom mulig}
+             \choiceitem[val=6]{Parkinsonisme, fyll ut pkt 25.7 dersom mulig}
+             \choiceitem[val=7]{Annen diagnose, fyll ut pkt 25.8 dersom mulig}
+             \choiceitem[val=8]{Ikke mulig å stille diagnose på nåværende tidspunkt}
+         \end{optionquestion}
+
+
+         \begin{optionquestion}[cols=1, rowsep=5pt, var=diag_etiology]{Alzheimers sykdom etiology}
+             \choiceitem[val=7]{AD-MCI, intermediate likelihood, according to the NIA-AA-criteria (Albert 2011)}
+
+             \choiceitem[val=8]{AD-SCD, high likelihood (equivalent to the NIA/AA-AD-MCI-criteria, but for SCD)}
+
+             \choiceitem[val=9]{AD-SCD, intermediate likelihood (equivalent to the NIA/AA-AD-MCI-criteria, but for SCD)}
+
+             \choiceitem[val=10]{Preclinical stage 1 - asymptomatic cerebral amyloidosis (NIA/AA, Sperling 2011)}
+
+             \choiceitem[val=11]{Preclinical stage 2 - amyloid positivity + evidence of synaptic dysfunction and/or early neurodegeneration (NIA/AA, Sperling 2011)}
+
+             \choiceitem[val=12]{Preclinical stage 3 - amyloid positivity + evidence of neurodegeneration + subtle cognitive decline - Not fulfilling AD-SCD or AD- MCI criteria (NIA/AA, Sperling 2011)}
+
+             \choiceitem[val=1]{Probable AD-dementia according to the NIA-AA-criteria (McKhann 2011)}
+
+             \choiceitem[val=2]{Probable AD-dementia with evidence of the AD pathophysiological process, according to the NIA-AA-criteria (McKhann 2011)}
+
+             \choiceitem[val=3]{Possible AD dementia according to the NIA-AA-criteria (McKhann 2011)}
+
+             \choiceitem[val=4]{Possible AD dementia with evidence of the AD pathophysiological process, according to the NIA-AA-criteria (McKhann 2011)}
+
+             \choiceitem[val=5]{Pathophysiologically proved AD dementia according to the NIA-AA-criteria (McKhann 2011)}
+         \end{optionquestion}
+
+         \begin{optionquestion}[var=diag_vascular, cols=1, rowsep=2pt]{Vaskulær kognitiv svikt}
+             \choiceitem[val=16]{Probable VCD (Vascular cognitive disorder) according to VASCOG (Sachdev 2014)}
+             \choiceitem[val=17]{Possible VCD (Vascular cognitive disorder) according to VASCOG (Sachdev 2014)}
+
+         \end{optionquestion}
+         \begin{optionquestion}[var=diag_lewy, cols=1, rowsep=2pt]{Lewy legeme sykdom}
+                 \choiceitem[val=22]{Probable DLB (dementia with Lewy bodies) according to McKeith et al. 2005}
+
+                 \choiceitem[val=23]{Possible DLB according to McKeith et al. 2005}
+
+                 \choiceitem[val=24]{DLB proven with neuropathology, according to McKeith et al. 2005}
+
+                 \choiceitem[val=25]{LB-predementia (fulfilling the DLB criteria of McKeith except of dementia)}
+         \end{optionquestion}
+         \begin{optionquestion}[var=diag_frontotemporal, cols=1, rowsep=2pt]{Frontotemporal degenerasjon}
+                 \choiceitem[val=27]{Probable bvFTD (behavioral variant frontotemporal degenerasjon) according to Rascovsky 2011}
+
+                 \choiceitem[val=28]{Possible bvFTD according to Rascovsky 2011}
+
+                 \choiceitem[val=29]{bvFTD with definite FTLD pathology, according to Rascovsky 2011}
+
+                 \choiceitem[val=30]{Nonfluent/agrammatic PPA (Primary progressive aphasia) (Gorno-Tempini 2011)}
+
+                 \choiceitem[val=31]{Logopenic PPA (Gorno-Tempini 2011)}
+
+                 \choiceitem[val=32]{Semantic PPA (Gorno-Tempini 2011)}
+
+                 \choiceitem[val=33]{PPA according to Mesulam 2003, subvariant not specified}
+         \end{optionquestion}
+
+         \begin{optionquestion}[var=diag_blandet, cols=1, rowsep=2pt]{Blandet etiologi}
+                 \choiceitem[val=38]{Concomitant AD and VCD according to NIA/AA and VASCOG-criteria}
+         \end{optionquestion}
+         \begin{optionquestion}[var=diag_park, cols=1, rowsep=2pt]{Parkinsonisme}
+                 \choiceitem[val=1]{Definite PD (Parkinson'd disease) according to UK Brain Bank criteria (Berardelli 2013) (except "more than one affected relative" is not an exclusion criteria)}
+
+                 \choiceitem[val=2]{Probable PDD (dementia associated with PD) (Emre 2007)}
+
+                 \choiceitem[val=3]{Possible PDD (Emre 2007)}
+
+                 \choiceitem[val=43]{PSP (Progressive Supranuclear Plasy), add comment on criteria used}
+
+                 \choiceitem[val=44]{CBD (Corticobasal Degeneration), add comment on criteria used}
+         \end{optionquestion}
+         \begin{optionquestion}[var=diag_other, cols=1, rowsep=2pt]{Annen diagnose,}
+                \choiceitem[val=47]{MCI - Unlikely due to AD (Albert 2011)}
+
+                 \choiceitem[val=48]{SCD - Unlikely due to AD (Tilsvarende som over, men for SCD)}
+
+                 \choiceitem[val=49]{MCI - Biomarker information is uninformative (Albert 2011)}
+
+                 \choiceitem[val=50]{SCD - Biomarker information is uninformative (Tilsvarende som over, men for SCD)}
+
+                 \choiceitem[val=46]{Kryss av her dersom det ikke er mulig å se noen etologisk diagnose på nåværende tidspunkt.}
+         \end{optionquestion}
+
+ 				%should it have val=45?
+ 				\textbox*[var=diag_other_text]{3cm}{Angi annen diagnose:}
+        \newpage
+ 				\textbox*[var=diag_com]{7cm}{Evt kommentar angående diagnose}
+
+
+ 				\yesno{exclusion}{Blir subjektet ekskludert?}
+
+
+  \qhead{Dato for eksklusjon}
+
+        \writtendate{exclusion_date}
+        \ExplSyntaxOn
+        \sdaps_qobject_begin:nnn {  } { Option } {stag_date_same_as_main}
+        \sdaps_qobject_append_var:n {stag_date_same_as_main}
+        \sdaps_checkbox_set_type:n {singlechoice}
+        \sdaps_answer:n { stag_date_same_as_main } \sdaps_checkbox:nn {stag_date_same_as_main } { }
+        \sdaps_qobject_end:n {}
+        \ExplSyntaxOff
+        \hspace{1ex} Samme dato som på første side\\
+        \small
+        \begin{choicegroup}[colsep=2pt,singlechoice, noalign, var=exclusion_date]{}
+        	\choice[val=0]{0}
+        	\choice[val=1]{1}
+        	\choice[val=2]{2}
+        	\choice[val=3]{3}
+        	\choice[val=4]{4}
+        	\choice[val=5]{5}
+        	\choice[val=6]{6}
+        	\choice[val=7]{7}
+        	\choice[val=8]{8}
+        	\choice[val=9]{9}
+        	\choice[val=10]{10}
+        	\choice[val=11]{11}
+        	\choice[val=12]{12}
+        	\choice[val=13]{13}
+        	\choice[val=14]{14}
+        	\choice[val=15]{15}
+        	\choice[val=16]{16}
+        	\choice[val=17]{17}
+        	\choice[val=18]{18}
+        	\choice[val=19]{19}
+        	\choice[val=20]{20}
+        	\choice[val=21]{21}
+        	\choice[val=22]{22}
+        	\choice[val=23]{23}
+        	\choice[val=24]{24}
+        	\choice[val=25]{25}
+        	\choice[val=26]{26}
+        	\choice[val=27]{27}
+        	\choice[val=28]{28}
+        	\choice[val=29]{29}
+        	\choice[val=30]{30}
+        	\choice[val=31]{31}
+
+          \question[var=day, range={1,...,31}]{Dag}
+          \question[var=month, range={1,...,12}]{Måned}
+          \question[var=year_1, range={...,9}]{År 202[?]}
+
+        \end{choicegroup}
+        \normalsize
+
+ 				\textbox*[var=exclusion_reason]{4cm}{Eksklusjonsgrunn}
+
+        \captionpagelarge{Denne siden har med vilje ingen tekst}
+
+  \end{questionnaire}
+
+\end{document}

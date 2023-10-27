@@ -1,0 +1,28 @@
+% This file is auto-generated from gettext translations (.po files).
+% The header of the original file follows for reference:
+%
+% Translations for sdaps LaTeX classes.
+% Copyright 2010-2013 Ferdinand Schwenk (ferdisdot@gmail.com).
+% Copyright 2011-2013 Benjamin Berg (benjamin@sipsolutions.net).
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3c
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+%
+
+\ProvidesDictionary{translator-sdaps-dictionary}{Russian}
+
+\providetranslation{answers}{{\CYRO}{\cyrt}{\cyrv}{\cyre}{\cyrt}{\cyrery}}
+\providetranslation{draft}{{\cyrch}{\cyre}{\cyrr}{\cyrn}{\cyro}{\cyrv}{\cyri}{\cyrk}}
+\providetranslation{info-corrected}{{\CYRO}{\cyrt}{\cyrm}{\cyre}{\cyrn}{\cyri}{\cyrt}{\cyrsftsn} {\cyrv}{\cyrery}{\cyrb}{\cyro}{\cyrr}}
+\providetranslation{info-cross}{{\CYRV}{\cyrery}{\cyrb}{\cyrr}{\cyra}{\cyrn}{\cyrn}{\cyrery}{\cyrishrt}}
+\providetranslation{info-fill}{{\CYRZ}{\cyra}{\cyrp}{\cyro}{\cyrl}{\cyrn}{\cyri}{\cyrt}{\cyrsftsn}, {\cyrch}{\cyrt}{\cyro}{\cyrb}{\cyrery} {\cyrv}{\cyrery}{\cyrb}{\cyrr}{\cyra}{\cyrt}{\cyrsftsn}}
+\providetranslation{info-multi}{{\CYRM}{\cyrn}{\cyro}{\cyrzh}{\cyre}{\cyrs}{\cyrt}{\cyrv}{\cyre}{\cyrn}{\cyrn}{\cyrery}{\cyrishrt} {\cyrv}{\cyrery}{\cyrb}{\cyro}{\cyrr} ({\cyrn}{\cyre}{\cyrs}{\cyrk}{\cyro}{\cyrl}{\cyrsftsn}{\cyrk}{\cyro} {\cyrv}{\cyra}{\cyrr}{\cyri}{\cyra}{\cyrn}{\cyrt}{\cyro}{\cyrv})}
+\providetranslation{info-single}{{\CYRE}{\cyrd}{\cyri}{\cyrn}{\cyrs}{\cyrt}{\cyrv}{\cyre}{\cyrn}{\cyrn}{\cyrery}{\cyrishrt} {\cyrv}{\cyrery}{\cyrb}{\cyro}{\cyrr} ({\cyro}{\cyrd}{\cyri}{\cyrn} {\cyrv}{\cyra}{\cyrr}{\cyri}{\cyra}{\cyrn}{\cyrt})}
+\providetranslation{infotext}{{\CYREREV}{\cyrt}{\cyra} {\cyra}{\cyrn}{\cyrk}{\cyre}{\cyrt}{\cyra} {\cyrp}{\cyrr}{\cyro}{\cyrv}{\cyre}{\cyrr}{\cyrya}{\cyre}{\cyrt}{\cyrs}{\cyrya} {\cyra}{\cyrv}{\cyrt}{\cyro}{\cyrm}{\cyra}{\cyrt}{\cyri}{\cyrch}{\cyre}{\cyrs}{\cyrk}{\cyri}. {\CYRP}{\cyro}{\cyrzh}{\cyra}{\cyrl}{\cyru}{\cyrishrt}{\cyrs}{\cyrt}{\cyra}, {\cyri}{\cyrs}{\cyrp}{\cyro}{\cyrl}{\cyrsftsn}{\cyrz}{\cyru}{\cyrishrt}{\cyrt}{\cyre} {\cyrr}{\cyru}{\cyrch}{\cyrk}{\cyru}, {\cyrch}{\cyrt}{\cyro}{\cyrb}{\cyrery} {\cyrz}{\cyra}{\cyrp}{\cyro}{\cyrl}{\cyrn}{\cyri}{\cyrt}{\cyrsftsn} {\cyrv}{\cyra}{\cyrsh}{\cyri} {\cyro}{\cyrt}{\cyrv}{\cyre}{\cyrt}{\cyrery} {\cyrs}{\cyrl}{\cyre}{\cyrd}{\cyru}{\cyryu}{\cyrshch}{\cyri}{\cyrm} {\cyro}{\cyrb}{\cyrr}{\cyra}{\cyrz}{\cyro}{\cyrm}:}
+\providetranslation{mean}{{\CYRZ}{\cyrn}{\cyra}{\cyrch}{\cyri}{\cyrt}}
+\providetranslation{questionnaireid}{ID {\cyra}{\cyrn}{\cyrk}{\cyre}{\cyrt}{\cyrery}:}
+\providetranslation{standard-deviation}{{\CYRS}{\cyrt}{\cyra}{\cyrn}{\cyrd}{\cyra}{\cyrr}{\cyrt}{\cyrn}{\cyro}{\cyre} {\cyro}{\cyrt}{\cyrk}{\cyrl}{\cyro}{\cyrn}{\cyre}{\cyrn}{\cyri}{\cyre}}
+\providetranslation{surveyid}{ID {\cyro}{\cyrp}{\cyrr}{\cyro}{\cyrs}{\cyra}:}

@@ -1,0 +1,19 @@
+[[pages]]
+path = "app.py"
+name = "Home"
+icon = ":house:"
+
+[[pages]]
+name = "CRF"
+icon = "📑"
+is_section = true
+
+[[pages]]
+path = "crf/crfsplitui.py"
+name = "Scan split & upload"
+icon = ":scissors:"
+
+[[pages]]
+path = "crf/crfimport.py"
+name = "Import"
+icon = ":ballot_box_with_check:"

@@ -1,0 +1,4 @@
+site_name: CRF Splitter User Documentation
+nav:
+    - Home: index.md
+theme: readthedocs

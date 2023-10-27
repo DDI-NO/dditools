@@ -1,0 +1,12 @@
+streamlit
+st-pages
+pandas
+psycopg2-binary
+numpy
+seaborn
+matplotlib
+openpyxl
+pyxnat
+pyzbar
+reportlab
+PyPDF2
