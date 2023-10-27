@@ -2,13 +2,13 @@
 
 ## Overview
 
-The CRF (Case Report Form) Splitter is a Streamlit app designed to upload scanned documents related to a patient visit (such as main CRF, MRI report, tests, etc.), split them by detected QR codes, and upload the resulting separate documents to XNAT. 
+The CRF Splitter is an app designed to upload scanned documents related to a patient visit (such as main CRF, MRI report, tests, etc.), split them by detected QR codes, and upload the resulting separate documents to XNAT. 
 
 ## Getting Started
 
 ### Launch the App
 
-Open the DDI Tools app in your web browser at `http://p96-podman:8181`, then select the ✂️Split & upload section in the left navigation bar. The landing page displays a form to input XNAT login credentials.
+Open the DDI Tools app in your web browser at `http://p96-podman:8181`, then click on the "✂️Scan split & upload" item in the left navigation bar. The landing page displays a form to input XNAT login credentials.
 ![Overview](img/crf/1_overview.png)
 
 ### Login to XNAT
@@ -31,7 +31,7 @@ After logging in, you will see a form with four fields and a file uploader:
 ![Overview](img/crf/4_select_crf.png)
 Once you enter the necessary data, the tool will allow you to upload the scanned file. Click the "Browse files" button to upload a scanned CRF document. The document should be in TIFF format.
 
-Once a file is uploaded, the app will display the total number of pages in the TIFF document and a preview of the first page of the uploaded TIFF.
+The app will display the total number of pages in the TIFF document and a preview of the first page of the uploaded TIFF.
 
 ![Overview](img/crf/5_uploaded_crf.png)
 
