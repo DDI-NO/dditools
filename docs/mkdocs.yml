@@ -1,5 +1,5 @@
 site_name: CRF Splitter User Documentation
-docs_dir: 'docs'
+docs_dir: '.'
 site_dir: 'site'  # This will be a temporary build folder
 nav:
     - Home: index.md
