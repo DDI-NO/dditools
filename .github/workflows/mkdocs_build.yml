@@ -3,7 +3,7 @@ name: Build and Deploy MkDocs
 on:
   push:
     branches:
-      - main  # change to your default branch name if it's not 'main'
+      - master  # change to your default branch name if it's not 'main'
 
 jobs:
   build:
