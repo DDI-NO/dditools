@@ -4,5 +4,6 @@ site_dir: '../site'  # This will be a temporary build folder
 nav:
     - Overview: index.md
     - CRF: 
+      - 'TSD File Import': tsdimport.md
       - 'Scan Split & Upload': crfsplit.md
 theme: readthedocs
