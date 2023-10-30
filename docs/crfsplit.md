@@ -5,19 +5,19 @@ The CRF Splitter is an app designed to upload scanned documents related to a pat
 ## Step 1: Import the scanned document into TSD
 The very first step consists in uploading the file into TSD for it to become available in our servers. See the [user guide](tsdimport.md) for importing files in case of any doubts. 
 
-## Step 1: Access the Application
+## Step 2: Access the Application
 
 1. **Navigate** to the DDI Tools web portal by entering `http://p96-podman:8181` in your web browser.
 2. **Select** the "✂️Scan split & upload" option from the left navigation panel. 
 
    ![Login Screen](img/crf/1_overview.png)
 
-## Step 2: Log In to XNAT
+## Step 3: Log In to XNAT
 
 1. **Input** your XNAT username and password in the appropriate fields.
 2. **Press** Enter to proceed.
 
-## Step 3: Complete the CRF Form
+## Step 4: Complete the CRF Form
 
 1. **Project**: Select the desired XNAT project from the dropdown list.
 2. **Subject**: Type in the subject identifier (the subject should already exist in the chosen project).
@@ -26,7 +26,7 @@ The very first step consists in uploading the file into TSD for it to become ava
 
    ![Form Fields](img/crf/2_loggedin.png)
 
-## Step 4: File Upload and Processing
+## Step 5: File Upload and Processing
 
 1. **Click** the "Browse files" button to choose a scanned CRF document in TIFF format.
 2. **Review** the page count and first page preview that appear after the file upload.
@@ -37,13 +37,13 @@ The very first step consists in uploading the file into TSD for it to become ava
 
    ![Processing](img/crf/6_processing_crf.png)
 
-## Step 5: Confirm Upload Status
+## Step 6: Confirm Upload Status
 
 1. **Verify** the success message that appears upon completion, which includes a link to the uploaded files in XNAT.
 
    ![Upload Complete](img/crf/7_upload_complete.png)
 
-## Step 6: Inspect Uploaded Files in XNAT
+## Step 7: Inspect Uploaded Files in XNAT
 
 1. **Click** the provided link to go to the XNAT subject page.
 2. **Select** the `Manage Files` action.
