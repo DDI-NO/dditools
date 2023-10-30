@@ -2,6 +2,9 @@
 
 The CRF Splitter is an app designed to upload scanned documents related to a patient visit (such as main CRF, MRI report, tests, etc.), split them by detected QR codes, and upload the resulting separate documents to XNAT. 
 
+## Step 1: Import the scanned document into TSD
+The very first step consists in uploading the file into TSD for it to become available in our servers. See the [user guide](tsdimport.md) for importing files in case of any doubts. 
+
 ## Step 1: Access the Application
 
 1. **Navigate** to the DDI Tools web portal by entering `http://p96-podman:8181` in your web browser.
