@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Scan Split & Upload - DDI Tools documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Scan Split \u0026 Upload";
+        var mkdocs_page_input_path = "crfsplit.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> DDI Tools documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Overview</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">CRF</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../tsdimport/">TSD File Import</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Scan Split & Upload</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#step-1-import-the-scanned-document-into-tsd">Step 1: Import the scanned document into TSD</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#step-2-access-the-application">Step 2: Access the Application</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#step-3-log-in-to-xnat">Step 3: Log In to XNAT</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#step-4-complete-the-crf-form">Step 4: Complete the CRF Form</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#step-5-file-upload-and-processing">Step 5: File Upload and Processing</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#step-6-confirm-upload-status">Step 6: Confirm Upload Status</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#step-7-inspect-uploaded-files-in-xnat">Step 7: Inspect Uploaded Files in XNAT</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">DDI Tools documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">CRF</li>
+      <li class="breadcrumb-item active">Scan Split & Upload</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="crf-splitter-upload-tool-user-documentation">CRF Splitter &amp; Upload Tool User Documentation</h1>
+<p>The CRF Splitter is an app designed to upload scanned documents related to a patient visit (such as main CRF, MRI report, tests, etc.), split them by detected QR codes, and upload the resulting separate documents to XNAT. </p>
+<h2 id="step-1-import-the-scanned-document-into-tsd">Step 1: Import the scanned document into TSD</h2>
+<p>The very first step consists in uploading the file into TSD for it to become available in our servers. See the <a href="../tsdimport/">user guide</a> for importing files in case of any doubts. </p>
+<h2 id="step-2-access-the-application">Step 2: Access the Application</h2>
+<ol>
+<li><strong>Navigate</strong> to the DDI Tools web portal by entering <code>http://p96-podman:8181</code> in your web browser.</li>
+<li><strong>Select</strong> the "✂️Scan split &amp; upload" option from the left navigation panel. </li>
+</ol>
+<p><img alt="Login Screen" src="../img/crf/1_overview.png" /></p>
+<h2 id="step-3-log-in-to-xnat">Step 3: Log In to XNAT</h2>
+<ol>
+<li><strong>Input</strong> your XNAT username and password in the appropriate fields.</li>
+<li><strong>Press</strong> Enter to proceed.</li>
+</ol>
+<h2 id="step-4-complete-the-crf-form">Step 4: Complete the CRF Form</h2>
+<ol>
+<li><strong>Project</strong>: Select the desired XNAT project from the dropdown list.</li>
+<li><strong>Subject</strong>: Type in the subject identifier (the subject should already exist in the chosen project).</li>
+<li><strong>Visit Date</strong>: Use the calendar tool to select the date of the assessment visit.</li>
+<li><strong>Assessment Visit</strong>: Pick the type of assessment visit from the dropdown menu.</li>
+</ol>
+<p><img alt="Form Fields" src="../img/crf/2_loggedin.png" /></p>
+<h2 id="step-5-file-upload-and-processing">Step 5: File Upload and Processing</h2>
+<ol>
+<li><strong>Click</strong> the "Browse files" button to choose a scanned CRF document in TIFF format.</li>
+<li><strong>Review</strong> the page count and first page preview that appear after the file upload.</li>
+</ol>
+<p><img alt="File Upload" src="../img/crf/5_uploaded_crf.png" /></p>
+<ol>
+<li><strong>Initiate</strong> the splitting and upload operation by clicking the "Process" button.</li>
+</ol>
+<p><img alt="Processing" src="../img/crf/6_processing_crf.png" /></p>
+<h2 id="step-6-confirm-upload-status">Step 6: Confirm Upload Status</h2>
+<ol>
+<li><strong>Verify</strong> the success message that appears upon completion, which includes a link to the uploaded files in XNAT.</li>
+</ol>
+<p><img alt="Upload Complete" src="../img/crf/7_upload_complete.png" /></p>
+<h2 id="step-7-inspect-uploaded-files-in-xnat">Step 7: Inspect Uploaded Files in XNAT</h2>
+<ol>
+<li><strong>Click</strong> the provided link to go to the XNAT subject page.</li>
+<li><strong>Select</strong> the <code>Manage Files</code> action.
+<img alt="Manage Files" src="../img/crf/8_manage_files.png" /></li>
+<li><strong>Locate</strong> your uploaded documents in the SCANNED_DOCS folder, organized by visit.</li>
+</ol>
+<p><img alt="Manage Files" src="../img/crf/9_crf_files.png" /></p>
+<p>By following these steps, you should be able to successfully upload and manage your scanned CRF documents.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../tsdimport/" class="btn btn-neutral float-left" title="TSD File Import"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../tsdimport/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
