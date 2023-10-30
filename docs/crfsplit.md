@@ -1,52 +1,52 @@
-# User Documentation for CRF Splitter & Upload tool
-
-## Overview
+# CRF Splitter & Upload Tool User Documentation
 
 The CRF Splitter is an app designed to upload scanned documents related to a patient visit (such as main CRF, MRI report, tests, etc.), split them by detected QR codes, and upload the resulting separate documents to XNAT. 
 
-## Getting Started
+## Step 1: Access the Application
 
-### Launch the App
+1. **Navigate** to the DDI Tools web portal by entering `http://p96-podman:8181` in your web browser.
+2. **Select** the "✂️Scan split & upload" option from the left navigation panel. 
 
-Open the DDI Tools app in your web browser at `http://p96-podman:8181`, then click on the "✂️Scan split & upload" item in the left navigation bar. The landing page displays a form to input XNAT login credentials.
-![Overview](img/crf/1_overview.png)
+   ![Login Screen](img/crf/1_overview.png)
 
-### Login to XNAT
+## Step 2: Log In to XNAT
 
-For the tool to be able to upload files to XNAT in your name, it needs you to provide your XNAT login credentials. Enter your XNAT username and password, then hit enter.
+1. **Input** your XNAT username and password in the appropriate fields.
+2. **Press** Enter to proceed.
 
-### CRF Section
+## Step 3: Complete the CRF Form
 
-After logging in, you will see a form with four fields and a file uploader:
+1. **Project**: Select the desired XNAT project from the dropdown list.
+2. **Subject**: Type in the subject identifier (the subject should already exist in the chosen project).
+3. **Visit Date**: Use the calendar tool to select the date of the assessment visit.
+4. **Assessment Visit**: Pick the type of assessment visit from the dropdown menu.
 
-1. **Project**: Choose the XNAT project from the dropdown list.
-2. **Subject**: Enter the subject identifier. The subject must exist in the specified project.
-3. **Visit Date**: Select the date of the assessment visit.
-4. **Assessment Visit**: Choose the type of assessment visit from the dropdown list.
+   ![Form Fields](img/crf/2_loggedin.png)
 
-![Overview](img/crf/2_loggedin.png)
+## Step 4: File Upload and Processing
 
-### Uploading and Processing
+1. **Click** the "Browse files" button to choose a scanned CRF document in TIFF format.
+2. **Review** the page count and first page preview that appear after the file upload.
 
-![Overview](img/crf/4_select_crf.png)
-Once you enter the necessary data, the tool will allow you to upload the scanned file. Click the "Browse files" button to upload a scanned CRF document. The document should be in TIFF format.
+   ![File Upload](img/crf/5_uploaded_crf.png)
+   
+3. **Initiate** the splitting and upload operation by clicking the "Process" button.
 
-The app will display the total number of pages in the TIFF document and a preview of the first page of the uploaded TIFF.
+   ![Processing](img/crf/6_processing_crf.png)
 
-![Overview](img/crf/5_uploaded_crf.png)
+## Step 5: Confirm Upload Status
 
-**Process**: Click the "Process" button to start the splitting and uploading process.
-![Overview](img/crf/6_processing_crf.png)
+1. **Verify** the success message that appears upon completion, which includes a link to the uploaded files in XNAT.
 
+   ![Upload Complete](img/crf/7_upload_complete.png)
 
-## Upload checking
+## Step 6: Inspect Uploaded Files in XNAT
 
-Once all documents are uploaded, a success message will appear with a link to inspect the uploaded files in XNAT.
-![Overview](img/crf/7_upload_complete.png)
+1. **Click** the provided link to go to the XNAT subject page.
+2. **Select** the `Manage Files` action.
+![Manage Files](img/crf/8_manage_files.png)
+3. **Locate** your uploaded documents in the SCANNED_DOCS folder, organized by visit.
 
-Click on the provided link to navigate to the XNAT subject to inspect the uploaded files. For that, click on the `Manage Files` action in the subject page.
-![Overview](img/crf/8_manage_files.png)
+   ![Manage Files](img/crf/9_crf_files.png)
 
-The files are placed under the SCANNED_DOCS folder, having a subfolder for each visit. 
-
-![Overview](img/crf/9_crf_files.png)
+By following these steps, you should be able to successfully upload and manage your scanned CRF documents.
